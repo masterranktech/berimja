@@ -1,0 +1,46 @@
+:root {
+  /* ۱. هویت بصری و رنگ اصلی (Brand Primary: Deep Crimson / Rose) */
+  --color-primary: #e11d48;          /* سرخ تیره/زرشکی استاندارد پلتفرم‌های دایرکتوری شهری */
+  --color-primary-hover: #be123c;    /* حالت هاور دکمه‌ها و لینک‌های کلیدی */
+  --color-primary-light: #fff1f2;    /* پس‌زمینه چیپ‌ها و بج‌های منتخب */
+  --color-primary-subtle: #ffe4e6;   /* پس‌زمینه تگ‌های فیلتر فعال */
+
+  /* ۲. رنگ ثانویه و مکمل (Secondary: Indigo / Navy Slate) */
+  --color-secondary: #0f172a;        /* سرمه‌ای تیره شهری برای هدر، دکمه‌های ثانویه و آیکون‌ها */
+  --color-secondary-hover: #1e293b;
+  --color-secondary-light: #f1f5f9;
+
+  /* ۳. سطوح و پس‌زمینه‌ها (Backgrounds & Surfaces) */
+  --bg-body: #f8fafc;                /* پس‌زمینه اصلی صفحه (ملایم و بدون بازتاب تند نور) */
+  --bg-surface: #ffffff;             /* پس‌زمینه کارت‌های مکان، منوها و پاپ‌آپ‌ها */
+  --bg-muted: #f1f5f9;               /* پس‌زمینه فیلدهای ورودی و المان‌های غیرفعال */
+
+  /* ۴. تایپوگرافی و رنگ متون (Text Colors) */
+  --text-primary: #0f172a;           /* مشکی ملایم برای اسامی مکان‌ها و تیترها */
+  --text-secondary: #475569;         /* خاکستری خوانا برای آدرس و متون گزینه‌ها */
+  --text-muted: #94a3b8;             /* خاکستری روشن برای ساعت کاری، متاداده و آیکون‌ها */
+  --text-inverse: #ffffff;           /* متن سفید روی دکمه‌های پررنگ */
+
+  /* ۵. مرزها و جداکننده‌ها (Borders & Dividers) */
+  --border-light: #f1f5f9;           /* خطوط نازک جداکننده بخش‌ها */
+  --border-base: #e2e8f0;            /* کادر دور کارت‌ها و اینپوت‌ها */
+  --border-focus: #e11d48;           /* رنگ حاشیه هنگام فوکوس روی فیلدهای جستجو */
+
+  /* ۶. وضعیت‌ها و تگ‌های تحلیلی (Status & Tag Indicators) */
+  --status-success: #10b981;         /* تگ‌های با اطمینان بالا / مکان باز است */
+  --status-success-light: #ecfdf5;
+  --status-warning: #f59e0b;         /* وضعیت در آستانه تغییر */
+  --status-warning-light: #fef3c7;
+  --status-danger: #ef4444;          /* بسته بودن مکان / گزارش مشکل */
+  --status-danger-light: #fef2f2;
+
+  /* ۷. سایه‌ها و انحناها (Shadows & Radius) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;             /* چیپ‌های تگ و دکمه‌های بیضی */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.03);
+}

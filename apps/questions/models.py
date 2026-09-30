@@ -21,9 +21,7 @@ class Question(TimeStampedModel):
     """مدل سوالات پرسشنامه که در مکان‌ها مجدداً استفاده می‌شوند."""
     section = models.ForeignKey(
         Section,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='questions',
         verbose_name="بخش مرتبط"
     )

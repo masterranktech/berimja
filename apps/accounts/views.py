@@ -74,7 +74,8 @@ class OTPVerifyView(APIView):
             is_used=False
         ).order_by('-created_at').first()
 
-        if not otp_request or not otp_request.is_valid():
+        # بررسی وجود کد و منقضی نشدن آن با پراپرتی is_expired
+        if not otp_request or otp_request.is_expired:
             return Response(
                 {"detail": "کد تأیید نامعتبر یا منقضی شده است."},
                 status=status.HTTP_400_BAD_REQUEST

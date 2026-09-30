@@ -4,11 +4,13 @@ from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser, OTPRequest
 from .serializers import OTPSendSerializer, OTPVerifySerializer, UserProfileSerializer
+from .throttling import OTPSendPhoneThrottle, OTPSendIPThrottle
 
 
 class OTPSendView(APIView):
-    """ارسال کد یک‌بارمصرف به شماره موبایل کاربر"""
+    """ارسال کد یک‌بارمصرف به شماره موبایل کاربر همراه با محدودکننده نرخ درخواست"""
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [OTPSendPhoneThrottle, OTPSendIPThrottle]
 
     def post(self, request):
         serializer = OTPSendSerializer(data=request.data)
@@ -16,13 +18,12 @@ class OTPSendView(APIView):
 
         phone_number = serializer.validated_data['phone_number']
 
-        # ابطال کدهای استفاده‌نشده قبلی برای این شماره
+        # ابطال کدهای قبلی
         OTPRequest.objects.filter(phone_number=phone_number, is_used=False).update(is_used=True)
 
-        # تولید کد جدید ۲ دقیقه‌ای
+        # تولید کد جدید
         otp = OTPRequest.generate_code(phone_number=phone_number, validity_minutes=2)
 
-        # در محیط توسعه کد در ترمینال پرینت می‌شود (در پروداکشن وب‌سرویس SMS فراخوانی خواهد شد)
         print(f"\n==========================================")
         print(f"[OTP Console] کد ورود برای {phone_number}: {otp.code}")
         print(f"==========================================\n")

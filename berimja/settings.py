@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'apps.questions',
     'apps.reviews',
     'apps.tags',
+
+    'apps.common'
 ]
 
 MIDDLEWARE = [
@@ -166,6 +168,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 12,
+
+    # ثبت Exception Handler سفارشی
+    'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler',
+
+    # تنظیمات Rate Limiting
+    'DEFAULT_THROTTLE_RATES': {
+        'otp_send_phone': '3/min',   # حداکثر ۳ درخواست در دقیقه برای هر شماره موبایل
+        'otp_send_ip': '10/min',     # حداکثر ۱۰ درخواست در دقیقه برای هر IP
+    }
 }
 
 SIMPLE_JWT = {

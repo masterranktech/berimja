@@ -1,5 +1,6 @@
 from django.db import models
 from apps.common.models import TimeStampedModel
+from .querysets import PlaceQuerySet
 
 
 class Category(TimeStampedModel):
@@ -20,6 +21,7 @@ class Category(TimeStampedModel):
 
 class Place(TimeStampedModel):
     """مدل مکان فیزیکی در شهر تهران"""
+    objects = PlaceQuerySet.as_manager()
     name = models.CharField(max_length=200, verbose_name="نام مکان")
     description = models.TextField(blank=True, null=True, verbose_name="توضیحات کوتاه")
     categories = models.ManyToManyField(

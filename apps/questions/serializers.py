@@ -1,4 +1,6 @@
+# apps/questions/serializers.py
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from apps.questions.models import Question, QuestionOption, Section
 
 
@@ -27,9 +29,9 @@ class SectionWithQuestionsSerializer(serializers.ModelSerializer):
         model = Section
         fields = ('id', 'title', 'sort_order', 'questions')
 
+    @extend_schema_field(QuestionSerializer(many=True))
     def get_questions(self, obj):
         place_categories = self.context.get('place_categories', [])
-        # سوالات این بخش که یا عمومی هستند یا به دسته‌بندی‌های این مکان متصلند
         questions = obj.questions.filter(is_active=True).filter(
             categories__in=place_categories
         ) | obj.questions.filter(is_active=True, is_general=True)

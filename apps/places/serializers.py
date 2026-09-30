@@ -1,4 +1,6 @@
+# apps/places/serializers.py
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from apps.places.models import Category, Place, PlaceImage
 from apps.tags.models import PlaceTag
 
@@ -40,6 +42,7 @@ class PlaceListSerializer(serializers.ModelSerializer):
             'cover_image', 'categories', 'tags'
         )
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_cover_image(self, obj):
         cover = obj.cover_image
         if cover and cover.image:
@@ -47,6 +50,7 @@ class PlaceListSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(cover.image.url) if request else cover.image.url
         return None
 
+    @extend_schema_field(PlaceTagItemSerializer(many=True))
     def get_tags(self, obj):
         active_tags = obj.place_tags.filter(is_active=True).select_related('tag')[:5]
         return PlaceTagItemSerializer(active_tags, many=True).data
@@ -66,6 +70,7 @@ class PlaceDetailSerializer(serializers.ModelSerializer):
             'categories', 'images', 'tags', 'created_at'
         )
 
+    @extend_schema_field(PlaceTagItemSerializer(many=True))
     def get_tags(self, obj):
         active_tags = obj.place_tags.filter(is_active=True).select_related('tag')
         return PlaceTagItemSerializer(active_tags, many=True).data

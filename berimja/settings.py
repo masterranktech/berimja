@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'drf_spectacular',
 
     # Local apps
     'apps.accounts',
@@ -176,7 +177,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'otp_send_phone': '3/min',   # حداکثر ۳ درخواست در دقیقه برای هر شماره موبایل
         'otp_send_ip': '10/min',     # حداکثر ۱۰ درخواست در دقیقه برای هر IP
-    }
+    },
+    # معرفی موتور تولید اسکیما drf-spectacular
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -185,4 +188,22 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'مستندات API پلتفرم بریم‌جا',
+    'DESCRIPTION': 'موتور تصمیم‌گیری و انتخاب مقصد در تهران بر اساس تگ‌های تجربی و فیدبک ساختاریافته',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    # فعال‌سازی هدر احراز هویت JWT در رابط تعاملی Swagger
+    'SECURITY': [{'BearerAuth': []}],
+    'SECURITY_SCHEMES': {
+        'BearerAuth': {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'JWT',
+        }
+    },
 }

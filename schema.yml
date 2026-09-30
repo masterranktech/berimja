@@ -1,0 +1,861 @@
+openapi: 3.0.3
+info:
+  title: مستندات API پلتفرم بریم‌جا
+  version: 1.0.0
+  description: موتور تصمیم‌گیری و انتخاب مقصد در تهران بر اساس تگ‌های تجربی و فیدبک
+    ساختاریافته
+paths:
+  /api/accounts/otp/send/:
+    post:
+      operationId: accounts_otp_send_create
+      description: ارسال کد یک‌بارمصرف به شماره موبایل کاربر همراه با محدودکننده نرخ
+        درخواست
+      summary: ارسال پیامک کد یک‌بارمصرف (OTP)
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPSendRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPSendRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPSendRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPSendResponse'
+          description: ''
+  /api/accounts/otp/verify/:
+    post:
+      operationId: accounts_otp_verify_create
+      description: بررسی کد یک‌بارمصرف و صدور توکن JWT
+      summary: بررسی کد تأیید و صدور توکن دسترسی
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPVerifyResponse'
+          description: ''
+  /api/accounts/profile/:
+    get:
+      operationId: accounts_profile_retrieve
+      description: مشاهده و ویرایش مشخصات پروفایل کاربر
+      summary: مشاهده پروفایل کاربر جاری
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: accounts_profile_partial_update
+      description: مشاهده و ویرایش مشخصات پروفایل کاربر
+      summary: ویرایش پروفایل
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/accounts/token/refresh/:
+    post:
+      operationId: accounts_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/categories/:
+    get:
+      operationId: categories_list
+      description: لیست دسته‌بندی‌های فعال سایت
+      summary: لیست دسته‌بندی‌ها
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: کدام فیلد باید هنگام مرتب‌سازی نتایج استفاده شود.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: یک عبارت جستجو.
+        schema:
+          type: string
+      tags:
+      - Places
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          description: ''
+  /api/home/:
+    get:
+      operationId: home_retrieve
+      description: 'اندپوینت جامع صفحه نخست: شامل دسته‌بندی‌ها، جدیدترین‌ها، پرطرفدارها
+        و تگ‌های فیلتر سریع'
+      summary: دریافت یکپارچه داده‌های صفحه اول
+      tags:
+      - Places
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomePageResponse'
+          description: ''
+  /api/places/:
+    get:
+      operationId: places_list
+      description: لیست مکان‌های فعال همراه با فیلتر سریع دسته‌بندی، تگ و جستجوی متنی
+      summary: لیست مکان‌ها با فیلتر و جستجو
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+      - in: query
+        name: district
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: کدام فیلد باید هنگام مرتب‌سازی نتایج استفاده شود.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: یک شماره صفحه‌ در مجموعه نتایج صفحه‌بندی شده.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: یک عبارت جستجو.
+        schema:
+          type: string
+      - in: query
+        name: tag
+        schema:
+          type: string
+      tags:
+      - Places
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPlaceListList'
+          description: ''
+  /api/places/{id}/:
+    get:
+      operationId: places_retrieve
+      description: دریافت اطلاعات کامل صفحه جزئیات یک مکان
+      summary: مشاهده جزئیات یک مکان
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Places
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceDetail'
+          description: ''
+  /api/places/{place_id}/questions/:
+    get:
+      operationId: places_questions_list
+      description: دریافت داینامیک سوالات مرتبط با یک مکان بر اساس دسته‌بندی‌های آن
+      summary: دریافت سوالات پرسشنامه متناسب با مکان
+      parameters:
+      - in: path
+        name: place_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Questions
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectionWithQuestions'
+          description: ''
+  /api/reports/:
+    post:
+      operationId: reports_create
+      description: ثبت گزارش یا پیشنهاد برای مکان (نیاز به لاگین)
+      summary: ثبت گزارش خطا یا پیشنهاد اصلاح برای مکان
+      tags:
+      - Reviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReportCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReportCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCreateResponse'
+          description: ''
+  /api/reviews/:
+    post:
+      operationId: reviews_create
+      description: ثبت بازخورد جدید ساختاریافته (نیاز به لاگین)
+      summary: ثبت بازخورد ساختاریافته برای مکان
+      tags:
+      - Reviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewCreateResponse'
+          description: ''
+components:
+  schemas:
+    AnswerInputRequest:
+      type: object
+      description: اعتبارسنجی ورودی هر پاسخ
+      properties:
+        question_id:
+          type: integer
+        option_id:
+          type: integer
+      required:
+      - option_id
+      - question_id
+    Category:
+      type: object
+      description: سریالایزر دسته‌بندی‌ها
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: نام دسته‌بندی
+          maxLength: 100
+        slug:
+          type: string
+          title: اسلاگ (شناسه متنی)
+          pattern: ^[-\w]+$
+          maxLength: 100
+        icon:
+          type: string
+          nullable: true
+          title: آیکون یا کلاس CSS
+          maxLength: 50
+      required:
+      - id
+      - name
+      - slug
+    HomePageResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        quick_filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuickFilterItem'
+        latest_places:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceList'
+        popular_places:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceList'
+      required:
+      - categories
+      - latest_places
+      - popular_places
+      - quick_filters
+    OTPSendRequest:
+      type: object
+      description: سریالایزر دریافت شماره موبایل جهت ارسال پیامک کد ورود
+      properties:
+        phone_number:
+          type: string
+          minLength: 1
+          pattern: ^09\d{9}$
+          maxLength: 11
+      required:
+      - phone_number
+    OTPSendResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    OTPVerifyRequest:
+      type: object
+      description: سریالایزر تایید کد یک‌بارمصرف
+      properties:
+        phone_number:
+          type: string
+          minLength: 1
+          pattern: ^09\d{9}$
+          maxLength: 11
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - code
+      - phone_number
+    OTPVerifyResponse:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserProfile'
+      required:
+      - access
+      - refresh
+      - user
+    PaginatedPlaceListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceList'
+    PatchedUserProfileRequest:
+      type: object
+      description: سریالایزر اطلاعات پروفایل کاربری
+      properties:
+        display_name:
+          type: string
+          nullable: true
+          title: نام نمایشی
+          maxLength: 100
+    PlaceDetail:
+      type: object
+      description: سریالایزر اطلاعات کامل صفحه جزئیات مکان
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: نام مکان
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          title: توضیحات کوتاه
+        district:
+          type: string
+          nullable: true
+          title: منطقه شهری
+          maxLength: 100
+        address:
+          type: string
+          title: آدرس کامل
+          maxLength: 500
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+          title: عرض جغرافیایی
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+          title: طول جغرافیایی
+        phone_number:
+          type: string
+          nullable: true
+          title: شماره تماس
+          maxLength: 50
+        working_hours:
+          type: string
+          nullable: true
+          title: ساعات کاری
+          maxLength: 200
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceImage'
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceTagItem'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: تاریخ ایجاد
+      required:
+      - address
+      - categories
+      - created_at
+      - id
+      - images
+      - name
+      - tags
+    PlaceImage:
+      type: object
+      description: سریالایزر تصاویر گالری مکان
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          title: فایل تصویر
+        alt_text:
+          type: string
+          nullable: true
+          title: متن جایگزین
+          maxLength: 200
+        sort_order:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: ترتیب نمایش
+        is_cover:
+          type: boolean
+          title: تصویر کاور
+      required:
+      - id
+      - image
+    PlaceList:
+      type: object
+      description: سریالایزر کارت‌های مکان در صفحه اصلی و لیست جستجو
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: نام مکان
+          maxLength: 200
+        district:
+          type: string
+          nullable: true
+          title: منطقه شهری
+          maxLength: 100
+        address:
+          type: string
+          title: آدرس کامل
+          maxLength: 500
+        cover_image:
+          type: string
+          nullable: true
+          readOnly: true
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceTagItem'
+          readOnly: true
+      required:
+      - address
+      - categories
+      - cover_image
+      - id
+      - name
+      - tags
+    PlaceTagItem:
+      type: object
+      description: سریالایزر تگ‌های فعال متصل به مکان همراه با درصد اطمینان
+      properties:
+        tag_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        strength:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: میزان قدرت/اطمینان (۰ تا ۱۰۰)
+      required:
+      - name
+      - tag_id
+    Question:
+      type: object
+      description: سریالایزر سوال همراه با گزینه‌های انتخابی
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          title: متن سوال
+          maxLength: 300
+        is_general:
+          type: boolean
+          title: سوال عمومی (نمایش برای همه مکان‌ها)
+        sort_order:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: ترتیب نمایش
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionOption'
+          readOnly: true
+      required:
+      - id
+      - options
+      - text
+    QuestionOption:
+      type: object
+      description: سریالایزر گزینه‌های سوال
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: عنوان گزینه
+          maxLength: 150
+        value:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: ارزش عددی/وزن گزینه (مثلاً برای محاسبات آماری)
+        sort_order:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: ترتیب نمایش
+      required:
+      - id
+      - title
+    QuickFilterItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+    ReportCreateRequest:
+      type: object
+      description: سریالایزر ارسال گزارش مشکل یا پیشنهاد توسط کاربر
+      properties:
+        place_id:
+          type: integer
+          writeOnly: true
+        report_type:
+          allOf:
+          - $ref: '#/components/schemas/ReportTypeEnum'
+          title: نوع گزارش
+        reason:
+          type: string
+          minLength: 1
+          title: عنوان/دلیل گزارش
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          title: توضیحات تکمیلی
+      required:
+      - place_id
+      - reason
+    ReportCreateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        report_id:
+          type: integer
+      required:
+      - message
+      - report_id
+    ReportTypeEnum:
+      enum:
+      - PROBLEM
+      - SUGGESTION
+      type: string
+      description: |-
+        * `PROBLEM` - گزارش مشکل
+        * `SUGGESTION` - پیشنهاد اصلاح/بهبود
+    ReviewCreateRequest:
+      type: object
+      description: سریالایزر ثبت بازخورد کامل به همراه پاسخ‌ها
+      properties:
+        place_id:
+          type: integer
+          writeOnly: true
+        comment:
+          type: string
+          nullable: true
+          title: نظر متنی (اختیاری)
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerInputRequest'
+          writeOnly: true
+      required:
+      - answers
+      - place_id
+    ReviewCreateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        review_id:
+          type: integer
+      required:
+      - message
+      - review_id
+    SectionWithQuestions:
+      type: object
+      description: سریالایزر بخش‌های پرسشنامه به همراه سوالات مرتبط
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: عنوان بخش
+          maxLength: 150
+        sort_order:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: ترتیب نمایش
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+      required:
+      - id
+      - questions
+      - title
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UserProfile:
+      type: object
+      description: سریالایزر اطلاعات پروفایل کاربری
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        phone_number:
+          type: string
+          readOnly: true
+          title: شماره تلفن همراه
+        display_name:
+          type: string
+          nullable: true
+          title: نام نمایشی
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: تاریخ ایجاد
+      required:
+      - created_at
+      - id
+      - phone_number
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

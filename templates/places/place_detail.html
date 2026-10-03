@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ place.name }} | بریم‌جا{% endblock %}
+{% block meta_description %}{{ place.description|truncatechars:150 }}{% endblock %}
+{% block og_title %}{{ place.name }} در بریم‌جا{% endblock %}
+{% block og_description %}{{ place.address }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- مسیر ناوبری (Breadcrumb) -->
+  <div style="padding: 1.25rem 0; font-size: 0.875rem; color: var(--text-muted);">
+    <a href="{% url 'home' %}">صفحه نخست</a>
+    <span> / </span>
+    <span>{{ place.name }}</span>
+  </div>
+
+  <div class="place-detail-layout">
+    <!-- ستون اصلی: گالری، معرفی، تگ‌ها و فیدبک‌ها -->
+    <section class="place-main-card">
+      <div class="detail-cover">
+        {% if place.cover_image %}
+          <img src="{{ place.cover_image.image.url }}" alt="{{ place.name }}">
+        {% else %}
+          <img src="{% static 'images/placeholder.svg' %}" alt="{{ place.name }}">
+        {% endif %}
+      </div>
+
+      <header class="detail-header">
+        <div>
+          <h1 class="detail-title">{{ place.name }}</h1>
+          <span style="font-size: 0.9rem; color: var(--text-muted);">{{ place.district }}</span>
+        </div>
+        <div class="detail-badges">
+          {% for cat in place.categories.all %}
+            <span class="badge-category">{{ cat.name }}</span>
+          {% endfor %}
+        </div>
+      </header>
+
+      <p class="detail-description">{{ place.description }}</p>
+
+      <!-- تگ‌های تجربی با داده‌های آماری -->
+      <div class="tags-analysis-box">
+        <h3 class="tags-box-title">
+          <i data-lucide="sparkles"></i>
+          تجربه کاربران درباره این مکان (داده‌های ساختاریافته)
+        </h3>
+        
+        <div class="tags-grid">
+          {% for pt in active_tags %}
+            <div class="tag-metric-card">
+              <div class="tag-metric-header">
+                <span>{{ pt.tag.name }}</span>
+                <span style="color: var(--color-primary); font-weight: 700;">{{ pt.strength }}٪</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: {{ pt.strength }}%;"></div>
+              </div>
+            </div>
+          {% empty %}
+            <p style="font-size: 0.85rem; color: var(--text-muted);">هنوز بازخوردی برای فعال‌سازی تگ‌ها ثبت نشده است.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- نظرات متنی تأییدشده -->
+      <div class="reviews-section">
+        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">نظرات و تجربیات ثبت‌شده</h3>
+        {% for r in approved_reviews %}
+          <div class="review-item">
+            <div class="review-user-row">
+              <span>{{ r.user.display_name|default:"کاربر بریم‌جا" }}</span>
+              <span>{{ r.created_at|date:"Y/m/d" }}</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-secondary);">{{ r.comment }}</p>
+          </div>
+        {% empty %}
+          <p style="font-size: 0.9rem; color: var(--text-muted);">اولین نفری باشید که تجربه خود را ثبت می‌کند.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- ستون کناری: آدرس، ساعت کاری و دکمه ثبت نظر -->
+    <aside class="sidebar-sticky">
+      <div class="info-card">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">اطلاعات کاربردی</h3>
+        
+        <div class="info-item">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <strong style="display: block; color: var(--text-primary); font-size: 0.85rem;">آدرس:</strong>
+            <span>{{ place.address }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i data-lucide="clock"></i>
+          <div>
+            <strong style="display: block; color: var(--text-primary); font-size: 0.85rem;">ساعت کاری:</strong>
+            <span>{{ place.working_hours|default:"نامشخص" }}</span>
+          </div>
+        </div>
+
+        {% if place.phone_number %}
+          <div class="info-item">
+            <i data-lucide="phone"></i>
+            <div>
+              <strong style="display: block; color: var(--text-primary); font-size: 0.85rem;">شماره تماس:</strong>
+              <span dir="ltr">{{ place.phone_number }}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light);">
+          <!-- لینک به صفحه فرم پرسشنامه مکان -->
+          <a href="/places/{{ place.id }}/questionnaire/" class="btn-fill-survey">
+            <i data-lucide="clipboard-check"></i>
+            <span>ثبت تجربه و بازخورد</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  lucide.createIcons();
+</script>
+{% endblock %}

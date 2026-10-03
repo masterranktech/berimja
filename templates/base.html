@@ -1,10 +1,75 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- عنوان صفحه داینامیک و بهینه برای سئو -->
+  <title>{% block title %}بریم‌جا | موتور تصمیم‌گیری مقصد در تهران{% endblock %}</title>
+
+  <!-- متاتگ‌های عمومی و شبکه‌های اجتماعی (SEO & Social Sharing) -->
+  <meta name="description" content="{% block meta_description %}کشف و تصمیم‌گیری سریع برای انتخاب کافه، رستوران و تفریحات تهران بر اساس تگ‌های تجربی و فیدبک واقعی کاربران.{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}بریم‌جا | انتخاب سریع مقصد در تهران{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}پلتفرم هوشمند انتخاب مقصد با داده‌های ساختاریافته و تگ‌های تجربی.{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{% static 'images/placeholder.svg' %}{% endblock %}">
+  <meta property="og:type" content="website">
+
+  <!-- فاوآیکون لوکال -->
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/logo/big.svg' %}">
+
+  <!-- فایل‌های CSS اصلی -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
 
+  <!-- هدر مشترک سایت -->
+  <header class="main-header">
+    <div class="container header-container">
+      <a href="/" class="brand-logo">
+        <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا" width="100">
+        <span class="brand-name">بریم‌جا</span>
+      </a>
+
+      <div class="header-actions">
+        <!-- وضعیت احراز هویت با ساختار جنگو -->
+        {% if user.is_authenticated %}
+          <div class="user-badge">
+            <i data-lucide="user"></i>
+            <span>{{ user.display_name|default:user.phone_number }}</span>
+          </div>
+        {% else %}
+          <button id="btn-open-login" class="btn-primary-outline">
+            <i data-lucide="log-in"></i>
+            <span>ورود / ثبت‌نام</span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- بدنه اصلی صفحات که توسط فرزندان پر می‌شود -->
+  <main class="main-content">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- فوتر مشترک سایت -->
+  <footer class="main-footer">
+    <div class="container footer-container">
+      <p class="footer-copy">© ۱۴۰۴ بریم‌جا — موتور تصمیم‌گیری انتخاب مقصد بر اساس تجربه‌های واقعی.</p>
+    </div>
+  </footer>
+
+  <!-- اسکریپت لوکال آیکون‌های Lucide -->
+  <script src="{% static 'js/lucide.min.js' %}"></script>
+  <script>
+    // فعال‌سازی سراسری آیکون‌ها
+    lucide.createIcons();
+  </script>
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

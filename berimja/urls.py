@@ -7,17 +7,23 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from apps.places.views import home_page_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # اندپوینت‌های اصلی پروژه
+    # صفحه نخست وب‌سایت
+    path('', home_page_view, name='home'),
+
+    # اپ مکان‌ها (شامل صفحات HTML و اندپوینت‌های API مربوطه)
+    path('', include('apps.places.urls', namespace='places')),
+
+    # سایر APIها
     path('api/accounts/', include('apps.accounts.urls', namespace='accounts')),
-    path('api/', include('apps.places.urls', namespace='places')),
     path('api/', include('apps.questions.urls', namespace='questions')),
     path('api/', include('apps.reviews.urls', namespace='reviews')),
 
-    # مستندات تعاملی API (OpenAPI 3.0 & Swagger)
+    # مستندات تعاملی Swagger / OpenAPI
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

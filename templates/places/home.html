@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}بریم‌جا | کشف و انتخاب مقصد در تهران بر اساس تجربه واقعی{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- بخش معرفی و عنوان -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">امروز کجا بریم؟</h1>
+    <p class="hero-subtitle">تصمیم‌گیری سریع برای رفتن به کافه، رستوران و تفریحات تهران با تکیه بر آمار دقیق و تگ‌های تجربی کاربران.</p>
+
+    <!-- فیلترهای سریع تگ‌ها -->
+    <div class="quick-filters">
+      <a href="{% url 'home' %}" class="filter-chip {% if not active_tag %}active{% endif %}">همه مقاصد</a>
+      {% for tag in quick_tags %}
+        <a href="?tag={{ tag.name }}" class="filter-chip {% if active_tag == tag.name %}active{% endif %}">
+          {{ tag.name }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- بخش نمایش لیست مکان‌ها -->
+<section class="container" style="padding-bottom: 4rem;">
+  <div class="places-section-header">
+    <h2 class="section-title">
+      {% if active_tag %}
+        مکان‌های دارای تگ «{{ active_tag }}»
+      {% else %}
+        منتخب مکان‌های تهران
+      {% endif %}
+    </h2>
+    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ places|length }} مکان یافت شد</span>
+  </div>
+
+  <div class="places-grid">
+    {% for place in places %}
+      {% include 'includes/place_card.html' with place=place %}
+    {% empty %}
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
+        <i data-lucide="map-pin-off" style="width: 3rem; height: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی با مشخصات انتخابی یافت نشد.</p>
+        <a href="{% url 'home' %}" class="btn-primary-outline" style="margin-top: 1rem;">مشاهده همه مکان‌ها</a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // اجرای مجدد آیکون‌ها پس از لود کارت‌ها
+  lucide.createIcons();
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+/* کامپوننت هدر */
+.main-header {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-base);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.brand-logo img {
+  width: 34px;
+  height: 34px;
+}
+
+/* دکمه خطی سرخ برند */
+.btn-primary-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-outline:hover {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background-color: var(--bg-muted);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+}
+
+/* کامپوننت فوتر */
+.main-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-base);
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}

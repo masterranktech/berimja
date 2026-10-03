@@ -13,6 +13,11 @@ from .serializers import (
     PlaceDetailSerializer,
     PlaceListSerializer,
 )
+from django.shortcuts import render
+from apps.places.models import Place
+from apps.tags.models import Tag
+from django.shortcuts import get_object_or_404
+from apps.reviews.models import ReviewStatus
 
 
 class CategoryListView(generics.ListAPIView):
@@ -107,3 +112,64 @@ class HomePageDataView(APIView):
             "latest_places": latest_data,
             "popular_places": popular_data,
         })
+
+
+def home_page_view(request):
+    """رندر سمت سرور (SSR) صفحه اصلی همراه با تگ‌ها و فیلتر سریع"""
+    active_tag = request.GET.get('tag', '').strip()
+
+    # واکشی بهینه مکان‌ها به همراه تگ‌ها، تصاویر و دسته‌ها (جلوگیری از مشکل N+1)
+    places_qs = Place.objects.filter(is_active=True).prefetch_related(
+        'categories',
+        'place_tags__tag',
+        'images'
+    ).order_by('-created_at')
+
+    # اعمال فیلتر سریع در صورت انتخاب کاربر
+    if active_tag:
+        places_qs = places_qs.filter(
+            place_tags__tag__name=active_tag,
+            place_tags__is_active=True
+        ).distinct()
+
+    # دریافت ۸ تگ پرتکرار و فعال برای فیلترهای سریع بالای صفحه
+    quick_tags = Tag.objects.filter(status='ACTIVE')[:8]
+
+    context = {
+        'places': places_qs,
+        'quick_tags': quick_tags,
+        'active_tag': active_tag,
+    }
+    return render(request, 'places/home.html', context)
+
+
+def place_detail_page_view(request, id):
+    """رندر سمت سرور (SSR) صفحه کامل جزئیات مکان"""
+    place = get_object_or_404(
+        Place.objects.prefetch_related(
+            'categories',
+            'images',
+            'place_tags__tag',
+            'reviews__user'
+        ),
+        id=id,
+        is_active=True
+    )
+
+    # تگ‌های فعال با اطمینان آماری مرتب‌شده
+    active_tags = place.place_tags.filter(
+        is_active=True,
+        tag__status='ACTIVE'
+    ).select_related('tag').order_by('-strength')
+
+    # بازخوردهای تاییدشده همراه با نظرات متنی
+    approved_reviews = place.reviews.filter(
+        status=ReviewStatus.APPROVED
+    ).exclude(comment__isnull=True).exclude(comment__exact='').select_related('user').order_by('-created_at')
+
+    context = {
+        'place': place,
+        'active_tags': active_tags,
+        'approved_reviews': approved_reviews,
+    }
+    return render(request, 'places/place_detail.html', context)

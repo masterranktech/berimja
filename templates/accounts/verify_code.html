@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}تأیید شماره موبایل | بریم‌جا{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{# غیرفعال‌سازی هدر و فوتر عمومی سایت #}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page-container">
+  <!-- لوگوی مرکزی با قابلیت کلیک و هدایت به خانه -->
+  <div class="auth-brand-center">
+    <a href="{% url 'places_web:home' %}" title="بازگشت به صفحه اصلی بریم‌جا">
+      <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا" width="56" height="56">
+      <h1 class="auth-brand-text">بریم‌جا</h1>
+    </a>
+  </div>
+
+  <div class="auth-modal-card">
+    <div class="auth-modal-header">
+      <h2>کد تأیید پیامک‌شده</h2>
+      <p>کد ۶ رقمی ارسال‌شده به <strong dir="ltr">{{ phone_number }}</strong> را بنویسید:</p>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="auth-error-msg">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="auth-input-group">
+        <input
+          type="text"
+          name="code"
+          placeholder="کد ۶ رقمی"
+          maxlength="6"
+          dir="ltr"
+          style="letter-spacing: 0.4rem; text-align: center; font-size: 1.35rem;"
+          required
+          autofocus
+        >
+      </div>
+
+      <button type="submit" class="btn-auth-submit">تأیید و ورود</button>
+      <a href="{% url 'accounts_web:login_phone' %}" class="btn-auth-link">ویرایش شماره موبایل</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -16,6 +16,7 @@ urlpatterns = [
 
     # ۲. اندپوینت‌های REST API (خروجی JSON با پیشوند api/)
     path('api/accounts/', include('apps.accounts.urls', namespace='accounts_api')),
+    path('accounts/', include('apps.accounts.urls_web', namespace='accounts_web')),
     path('api/places/', include('apps.places.urls', namespace='places_api')),
     path('api/questions/', include('apps.questions.urls', namespace='questions_api')),
     path('api/reviews/', include('apps.reviews.urls', namespace='reviews_api')),

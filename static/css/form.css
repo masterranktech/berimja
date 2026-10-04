@@ -1,0 +1,183 @@
+/* ==========================================================================
+   طرح‌بندی و کانتینر صفحات ورود و احراز هویت (Auth Pages)
+   ========================================================================== */
+
+/* والد اصلی جهت قرارگیری دقیق فرم در مرکز صفحه و مهار اسکرول اضافی */
+main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-body, #f8fafc);
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* ساختار کانتینر محتوایی */
+.auth-page-container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/* لوگو و نام برند در بالای کادر فرم */
+.auth-brand-center {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.auth-brand-center a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-primary, #0f172a);
+  text-decoration: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.auth-brand-center a:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+.auth-brand-center img {
+  width: 52px;
+  height: 52px;
+  display: block;
+}
+
+.auth-brand-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-secondary, #0f172a);
+  letter-spacing: -0.5px;
+}
+
+/* ==========================================================================
+   کارت و المان‌های فرم احراز هویت
+   ========================================================================== */
+
+.auth-modal-card {
+  width: 100%;
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-base, #e2e8f0);
+  border-radius: var(--radius-lg, 1rem);
+  padding: 2.25rem 2rem;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06),
+              0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+}
+
+.auth-modal-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.auth-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  margin-bottom: 0.4rem;
+}
+
+.auth-modal-header p {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.5;
+}
+
+/* فیلدهای ورودی و برچسب‌ها */
+.auth-input-group {
+  margin-bottom: 1.25rem;
+  text-align: right;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 0.45rem;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-primary, #0f172a);
+  background-color: var(--bg-body, #f8fafc);
+  border: 1.5px solid var(--border-base, #cbd5e1);
+  border-radius: var(--radius-md, 0.5rem);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.auth-input-group input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: var(--color-primary, #e11d48);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+}
+
+/* ورودی کد تأیید ۶ رقمی (OTP) */
+.auth-input-group input[name="code"] {
+  text-align: center;
+  letter-spacing: 0.45rem;
+  font-weight: 700;
+  font-size: 1.35rem;
+}
+
+/* دکمه‌های فرم */
+.btn-auth-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: var(--color-primary, #e11d48);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-auth-submit:hover {
+  background-color: var(--color-primary-hover, #be123c);
+}
+
+.btn-auth-submit:active {
+  transform: scale(0.99);
+}
+
+.btn-auth-link {
+  display: block;
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #64748b);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.btn-auth-link:hover {
+  color: var(--color-primary, #e11d48);
+}
+
+/* پیام‌های وضعیت و اعتبارسنجی */
+.auth-error-msg {
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md, 0.5rem);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+  text-align: right;
+}

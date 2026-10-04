@@ -26,42 +26,51 @@
 <body>
 
   <!-- هدر مشترک سایت -->
+  {% block site_header %}
   <header class="main-header">
     <div class="container header-container">
-      <a href="/" class="brand-logo">
-        <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا" width="100">
+      <a href="{% url 'places_web:home' %}" class="brand-logo">
+        <img src="{% static 'images/logo.svg' %}" alt="بریم‌جا" width="36" height="36">
         <span class="brand-name">بریم‌جا</span>
       </a>
 
       <div class="header-actions">
-        <!-- وضعیت احراز هویت با ساختار جنگو -->
         {% if user.is_authenticated %}
           <div class="user-badge">
             <i data-lucide="user"></i>
             <span>{{ user.display_name|default:user.phone_number }}</span>
+            <a href="{% url 'accounts_web:logout' %}" style="margin-right: 0.5rem; color: var(--color-primary);" title="خروج">
+              <i data-lucide="log-out"></i>
+            </a>
           </div>
         {% else %}
-          <button id="btn-open-login" class="btn-primary-outline">
+          <a href="{% url 'accounts_web:login_phone' %}" class="btn-primary-outline">
             <i data-lucide="log-in"></i>
             <span>ورود / ثبت‌نام</span>
-          </button>
+          </a>
         {% endif %}
       </div>
     </div>
   </header>
+  {% endblock site_header %}
 
-  <!-- بدنه اصلی صفحات که توسط فرزندان پر می‌شود -->
+  <!-- بدنه اصلی -->
   <main class="main-content">
     {% block content %}
     {% endblock %}
   </main>
 
   <!-- فوتر مشترک سایت -->
+  {% block site_footer %}
   <footer class="main-footer">
     <div class="container footer-container">
       <p class="footer-copy">© ۱۴۰۴ بریم‌جا — موتور تصمیم‌گیری انتخاب مقصد بر اساس تجربه‌های واقعی.</p>
     </div>
   </footer>
+  {% endblock site_footer %}
+
+  <!-- اسکریپت کنترل مودال و وضعیت نشست -->
+  <script src="{% static 'js/auth-modal.js' %}"></script>
 
   <!-- اسکریپت لوکال آیکون‌های Lucide -->
   <script src="{% static 'js/lucide.min.js' %}"></script>

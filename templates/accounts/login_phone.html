@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ورود یا عضویت | بریم‌جا{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{# غیرفعال‌سازی هدر و فوتر عمومی سایت #}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page-container">
+  <!-- لوگوی مرکزی با قابلیت کلیک و هدایت به خانه -->
+  <div class="auth-brand-center">
+    <a href="{% url 'places_web:home' %}" title="بازگشت به صفحه اصلی بریم‌جا">
+      <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا" width="56" height="56">
+      <h1 class="auth-brand-text">بریم‌جا</h1>
+    </a>
+  </div>
+
+  <div class="auth-modal-card">
+    <div class="auth-modal-header">
+      <h2>ورود یا ثبت‌نام</h2>
+      <p>برای ثبت نظر و مشارکت، شماره موبایل خود را وارد کنید.</p>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="auth-error-msg">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="auth-input-group">
+        <label for="id_phone">شماره تلفن همراه:</label>
+        <input
+          type="tel"
+          name="phone_number"
+          id="id_phone"
+          placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+          maxlength="11"
+          dir="ltr"
+          required
+          autofocus
+        >
+      </div>
+
+      <button type="submit" class="btn-auth-submit">ارسال کد تأیید</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

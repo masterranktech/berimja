@@ -118,9 +118,9 @@
 
         <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light);">
           <!-- لینک ثبت بازخورد و شرکت در پرسشنامه -->
-          <a href="/places/{{ place.id }}/questionnaire/" class="btn-fill-survey">
-            <i data-lucide="clipboard-check"></i>
-            <span>ثبت تجربه و بازخورد</span>
+          <a href="{% url 'places_web:place_questionnaire' place.id %}" class="btn-fill-survey">
+                <i data-lucide="clipboard-check"></i>
+                <span>ثبت تجربه و بازخورد</span>
           </a>
         </div>
       </div>

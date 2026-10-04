@@ -1,10 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}ثبت بازخورد برای {{ place.name }} | بریم‌جا{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/questionnaire.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="survey-wrapper">
+    <!-- هدر فرم -->
+    <header class="survey-header">
+      <div class="survey-place-badge">
+        <i data-lucide="map-pin"></i>
+        <span>{{ place.name }} ({{ place.district }})</span>
+      </div>
+      <h1 class="survey-title">ثبت تجربه و ارزیابی مقصد</h1>
+      <p class="survey-desc">پاسخ‌های شما مستقیماً به تگ‌های آماری تبدیل شده و به انتخاب دیگران کمک می‌کند.</p>
+    </header>
+
+    <!-- پیام‌های وضعیت (خطا یا موفقیت) -->
+    <div id="survey-alert" class="form-alert"></div>
+
+    <form id="questionnaire-form" data-place-id="{{ place.id }}">
+      {% csrf_token %}
+
+      <!-- نمایش بخش‌ها و سوالات داینامیک -->
+      {% for sec_item in questionnaire_sections %}
+        <div class="survey-section">
+          <h2 class="section-legend">
+            <i data-lucide="check-circle-2"></i>
+            {{ sec_item.section.title }}
+          </h2>
+
+          {% for question in sec_item.questions %}
+            <div class="question-block" data-question-id="{{ question.id }}">
+              <p class="question-text">{{ forloop.counter }}. {{ question.text }}</p>
+              
+              <div class="options-grid">
+                {% for opt in question.options.all %}
+                  <label class="option-label">
+                    <input type="radio" name="q_{{ question.id }}" value="{{ opt.id }}" required>
+                    <span>{{ opt.title }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <!-- نظر متنی اختیاری -->
+      <div class="comment-box">
+        <label for="review-comment">توضیح یا نکته تکمیلی (اختیاری):</label>
+        <textarea id="review-comment" class="comment-textarea" placeholder="اگر نکته‌ای درباره قیمت، دنج بودن یا خدمات وجود دارد بنویسید..."></textarea>
+      </div>
+
+      <!-- دکمه ثبت -->
+      <button type="submit" id="btn-submit" class="btn-submit-survey">
+        <i data-lucide="send"></i>
+        <span>ثبت نهایی و پردازش داده‌ها</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // هایلایت کردن گزینه‌های انتخاب‌شده
+  document.querySelectorAll('.option-label input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const parentGrid = this.closest('.options-grid');
+      parentGrid.querySelectorAll('.option-label').forEach(lbl => lbl.classList.remove('selected'));
+      if (this.checked) {
+        this.closest('.option-label').classList.add('selected');
+      }
+    });
+  });
+
+  // مدیریت ارسال فرم با Fetch به صورت اتمیک به اندپوینت API
+  const form = document.getElementById('questionnaire-form');
+  const alertBox = document.getElementById('survey-alert');
+  const submitBtn = document.getElementById('btn-submit');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    alertBox.className = 'form-alert';
+    alertBox.style.display = 'none';
+
+    // استخراج پاسخ‌ها
+    const placeId = form.getAttribute('data-place-id');
+    const answers = [];
+    const questionBlocks = document.querySelectorAll('.question-block');
+
+    for (const block of questionBlocks) {
+      const qId = block.getAttribute('data-question-id');
+      const selected = block.querySelector(`input[name="q_${qId}"]:checked`);
+      if (selected) {
+        answers.push({
+          question_id: parseInt(qId),
+          option_id: parseInt(selected.value)
+        });
+      }
+    }
+
+    const comment = document.getElementById('review-comment').value.trim();
+
+    // بررسی توکن JWT از LocalStorage
+    const token = localStorage.getItem('berimja_access_token');
+    if (!token) {
+      alertBox.textContent = 'برای ثبت بازخورد ابتدا باید وارد حساب کاربری خود شوید.';
+      alertBox.className = 'form-alert error';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>در حال پردازش داده‌ها...</span>';
+
+    try {
+      const response = await fetch('/api/reviews/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          place_id: parseInt(placeId),
+          comment: comment || null,
+          answers: answers
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alertBox.textContent = 'بازخورد شما با موفقیت ثبت شد و تگ‌های مکان به‌روزرسانی شدند.';
+        alertBox.className = 'form-alert success';
+        setTimeout(() => {
+          window.location.href = `/places/${placeId}/`;
+        }, 1500);
+      } else {
+        const errorMsg = data.message || data.detail || (data.errors ? JSON.stringify(data.errors) : 'خطا در ثبت اطلاعات.');
+        alertBox.textContent = errorMsg;
+        alertBox.className = 'form-alert error';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i data-lucide="send"></i><span>ثبت نهایی و پردازش داده‌ها</span>';
+        lucide.createIcons();
+      }
+    } catch (err) {
+      alertBox.textContent = 'خطا در برقراری ارتباط با سرور.';
+      alertBox.className = 'form-alert error';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i data-lucide="send"></i><span>ثبت نهایی و پردازش داده‌ها</span>';
+      lucide.createIcons();
+    }
+  });
+
+  lucide.createIcons();
+</script>
+{% endblock %}

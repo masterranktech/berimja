@@ -1,0 +1,173 @@
+/* کانتینر مرکزی فرم */
+.survey-wrapper {
+  max-width: 760px;
+  margin: 2rem auto 4rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.survey-header {
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.survey-place-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.survey-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.survey-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* کارت‌های بخش‌های پرسشنامه */
+.survey-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-legend {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.question-block {
+  margin-bottom: 1.75rem;
+}
+
+.question-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.85rem;
+}
+
+/* گزینه‌ها در قالب دکمه‌های رادیویی سفارشی */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border-base);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.option-label input[type="radio"] {
+  margin-left: 0.65rem;
+  accent-color: var(--color-primary);
+}
+
+.option-label:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.option-label.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
+  font-weight: 600;
+}
+
+/* فیلد نظر متنی اختیاری */
+.comment-box {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.comment-box label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  min-height: 100px;
+  background-color: var(--bg-body);
+}
+
+.comment-textarea:focus {
+  border-color: var(--color-primary);
+  background-color: var(--bg-surface);
+}
+
+/* اعلان‌ها و دکمه ارسال */
+.btn-submit-survey {
+  width: 100%;
+  padding: 0.95rem;
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-submit-survey:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.form-alert {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  display: none;
+  font-size: 0.9rem;
+}
+
+.form-alert.error {
+  background-color: var(--status-danger-light);
+  color: var(--status-danger);
+  border: 1px solid var(--status-danger);
+  display: block;
+}
+
+.form-alert.success {
+  background-color: var(--status-success-light);
+  color: var(--status-success);
+  border: 1px solid var(--status-success);
+  display: block;
+}

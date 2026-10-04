@@ -1,4 +1,3 @@
-# apps/places/views.py
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,6 +17,7 @@ from apps.places.models import Place
 from apps.tags.models import Tag
 from django.shortcuts import get_object_or_404
 from apps.reviews.models import ReviewStatus
+from apps.questions.models import Section
 
 
 class CategoryListView(generics.ListAPIView):
@@ -173,3 +173,32 @@ def place_detail_page_view(request, id):
         'approved_reviews': approved_reviews,
     }
     return render(request, 'places/place_detail.html', context)
+
+
+def place_questionnaire_page_view(request, id):
+    """رندر سمت سرور (SSR) صفحه پرسشنامه مکان متناسب با دسته‌بندی‌های آن"""
+    place = get_object_or_404(Place.objects.prefetch_related('categories'), id=id, is_active=True)
+    place_categories = place.categories.all()
+
+    # واکشی بخش‌ها و سوالات مرتبط (عمومی یا مرتبط با دسته‌بندی این مکان)
+    sections = Section.objects.prefetch_related('questions__options').order_by('sort_order', 'id')
+
+    questionnaire_sections = []
+    for sec in sections:
+        # سوالات فعال متعلق به این بخش که یا عمومی هستند یا به این مکان مربوطند
+        matched_questions = sec.questions.filter(is_active=True).filter(
+            categories__in=place_categories
+        ) | sec.questions.filter(is_active=True, is_general=True)
+
+        distinct_questions = matched_questions.distinct().order_by('sort_order', 'id')
+        if distinct_questions.exists():
+            questionnaire_sections.append({
+                'section': sec,
+                'questions': distinct_questions
+            })
+
+    context = {
+        'place': place,
+        'questionnaire_sections': questionnaire_sections,
+    }
+    return render(request, 'places/questionnaire.html', context)

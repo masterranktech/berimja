@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static jalali_tags %}
 {% load static %}
 
 {% block title %}{{ place.name }} | بریم‌جا{% endblock %}
@@ -68,21 +69,21 @@
         </div>
       </div>
 
-      <!-- نظرات متنی تأییدشده -->
-      <div class="reviews-section">
-        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">نظرات و تجربیات ثبت‌شده</h3>
-        {% for r in approved_reviews %}
-          <div class="review-item">
-            <div class="review-user-row">
-              <span>{{ r.user.display_name|default:"کاربر بریم‌جا" }}</span>
-              <span>{{ r.created_at|date:"Y/m/d" }}</span>
-            </div>
-            <p style="font-size: 0.95rem; color: var(--text-secondary);">{{ r.comment }}</p>
-          </div>
-        {% empty %}
-          <p style="font-size: 0.9rem; color: var(--text-muted);">اولین نفری باشید که تجربه خود را ثبت می‌کند.</p>
-        {% endfor %}
+<div class="reviews-section">
+  <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">نظرات و تجربیات ثبت‌شده</h3>
+  {% for r in approved_reviews %}
+    <div class="review-item">
+      <div class="review-user-row">
+        <span>{{ r.user.display_name }}</span>
+        <!-- نمایش تاریخ کامنت به تقویم شمسی -->
+        <span>{{ r.created_at|to_jalali:"%Y/%m/%d" }}</span>
       </div>
+      <p style="font-size: 0.95rem; color: var(--text-secondary);">{{ r.comment }}</p>
+    </div>
+  {% empty %}
+    <p style="font-size: 0.9rem; color: var(--text-muted);">اولین نفری باشید که تجربه خود را ثبت می‌کند.</p>
+  {% endfor %}
+</div>
     </section>
 
     <!-- ستون کناری: آدرس، ساعت کاری و دکمه ورود به پرسشنامه -->

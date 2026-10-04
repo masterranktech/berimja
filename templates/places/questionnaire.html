@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static jalali_tags %}
 {% load static %}
 
 {% block title %}ثبت بازخورد برای {{ place.name }} | بریم‌جا{% endblock %}
@@ -62,7 +63,7 @@
   {% if existing_review %}
   <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
     <i data-lucide="info"></i>
-    <span>شما در تاریخ {{ existing_review.created_at|date:"Y/m/d" }} برای این مکان بازخورد ثبت کرده‌اید. گزینه‌های انتخابی شما در زیر مشخص شده‌اند و در صورت نیاز می‌توانید آن‌ها را ویرایش فرمایید.</span>
+    <span>شما در تاریخ {{ existing_review.created_at|to_jalali:"%Y/%m/%d" }} برای این مکان بازخورد ثبت کرده‌اید. گزینه‌های انتخابی شما در زیر مشخص شده‌اند و در صورت نیاز می‌توانید آن‌ها را ویرایش فرمایید.</span>
   </div>
 {% endif %}
 

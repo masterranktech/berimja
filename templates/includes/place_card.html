@@ -2,7 +2,7 @@
 <article class="place-card">
   <!-- تصویر و نشانگر وضعیت -->
   <div class="card-media">
-    <a href="{% url 'places:place_detail' place.id %}">
+    <a href="{% url 'places_web:place_detail' place.id %}">
       {% if place.cover_image %}
         <img src="{{ place.cover_image.image.url }}" alt="{{ place.name }}" loading="lazy">
       {% else %}
@@ -21,7 +21,7 @@
   <div class="card-body">
     <div class="card-title-row">
       <h3 class="card-title">
-        <a href="{% url 'places:place_detail' place.id %}">{{ place.name }}</a>
+        <a href="{% url 'places_web:place_detail' place.id %}">{{ place.name }}</a>
       </h3>
       {% if place.district %}
         <span class="card-district">
@@ -48,13 +48,13 @@
     </div>
   </div>
 
-  <!-- فوتر کارت (ساعت کاری و اقدام) -->
+  <!-- فوتر کارت (ساعت کاری و دکمه جزئیات) -->
   <div class="card-footer">
     <div class="card-hours">
       <i data-lucide="clock"></i>
       <span>{{ place.working_hours|default:"ساعات کاری نامشخص" }}</span>
     </div>
-    <a href="{% url 'places:place_detail' place.id %}" class="card-action-link">
+    <a href="{% url 'places_web:place_detail' place.id %}" class="card-action-link">
       <span>جزئیات و نظرات</span>
       <i data-lucide="chevron-left"></i>
     </a>

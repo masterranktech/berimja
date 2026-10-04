@@ -14,13 +14,13 @@
 <div class="container">
   <!-- مسیر ناوبری (Breadcrumb) -->
   <div style="padding: 1.25rem 0; font-size: 0.875rem; color: var(--text-muted);">
-    <a href="{% url 'home' %}">صفحه نخست</a>
+    <a href="{% url 'places_web:home' %}">صفحه نخست</a>
     <span> / </span>
     <span>{{ place.name }}</span>
   </div>
 
   <div class="place-detail-layout">
-    <!-- ستون اصلی: گالری، معرفی، تگ‌ها و فیدبک‌ها -->
+    <!-- ستون اصلی: کاور، معرفی، تگ‌های تجربی و فیدبک‌ها -->
     <section class="place-main-card">
       <div class="detail-cover">
         {% if place.cover_image %}
@@ -44,13 +44,13 @@
 
       <p class="detail-description">{{ place.description }}</p>
 
-      <!-- تگ‌های تجربی با داده‌های آماری -->
+      <!-- تگ‌های تجربی و آماری -->
       <div class="tags-analysis-box">
         <h3 class="tags-box-title">
           <i data-lucide="sparkles"></i>
           تجربه کاربران درباره این مکان (داده‌های ساختاریافته)
         </h3>
-        
+
         <div class="tags-grid">
           {% for pt in active_tags %}
             <div class="tag-metric-card">
@@ -85,11 +85,11 @@
       </div>
     </section>
 
-    <!-- ستون کناری: آدرس، ساعت کاری و دکمه ثبت نظر -->
+    <!-- ستون کناری: آدرس، ساعت کاری و دکمه ورود به پرسشنامه -->
     <aside class="sidebar-sticky">
       <div class="info-card">
         <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">اطلاعات کاربردی</h3>
-        
+
         <div class="info-item">
           <i data-lucide="map-pin"></i>
           <div>
@@ -117,7 +117,7 @@
         {% endif %}
 
         <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light);">
-          <!-- لینک به صفحه فرم پرسشنامه مکان -->
+          <!-- لینک ثبت بازخورد و شرکت در پرسشنامه -->
           <a href="/places/{{ place.id }}/questionnaire/" class="btn-fill-survey">
             <i data-lucide="clipboard-check"></i>
             <span>ثبت تجربه و بازخورد</span>

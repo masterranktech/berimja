@@ -7,23 +7,20 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from apps.places.views import home_page_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # صفحه نخست وب‌سایت
-    path('', home_page_view, name='home'),
+    # ۱. صفحات وبسایت (HTML Views برای فرانت و سئو)
+    path('', include(('apps.places.urls_web', 'places_web'), namespace='places_web')),
 
-    # اپ مکان‌ها (شامل صفحات HTML و اندپوینت‌های API مربوطه)
-    path('', include('apps.places.urls', namespace='places')),
+    # ۲. اندپوینت‌های REST API (خروجی JSON با پیشوند api/)
+    path('api/accounts/', include('apps.accounts.urls', namespace='accounts_api')),
+    path('api/places/', include('apps.places.urls', namespace='places_api')),
+    path('api/questions/', include('apps.questions.urls', namespace='questions_api')),
+    path('api/reviews/', include('apps.reviews.urls', namespace='reviews_api')),
 
-    # سایر APIها
-    path('api/accounts/', include('apps.accounts.urls', namespace='accounts')),
-    path('api/', include('apps.questions.urls', namespace='questions')),
-    path('api/', include('apps.reviews.urls', namespace='reviews')),
-
-    # مستندات تعاملی Swagger / OpenAPI
+    # ۳. مستندات خودکار OpenAPI / Swagger
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

@@ -42,14 +42,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         if not place:
             raise serializers.ValidationError({"place_id": "مکان مورد نظر یافت نشد."})
 
-        # قانون بیزینس: هر کاربر تنها ۱ بازخورد به ازای هر مکان
-        if Review.objects.filter(user=user, place=place).exists():
-            raise serializers.ValidationError({"detail": "شما قبلاً برای این مکان بازخورد ثبت کرده‌اید."})
-
         if not attrs.get('answers'):
             raise serializers.ValidationError({"answers": "حداقل باید به یک سوال پاسخ دهید."})
 
-        # بررسی تکراری نبودن پاسخ به یک سوال در یک درخواست
         question_ids = [ans['question_id'] for ans in attrs['answers']]
         if len(question_ids) != len(set(question_ids)):
             raise serializers.ValidationError({"answers": "برای هر سوال تنها می‌توانید یک گزینه را انتخاب کنید."})
@@ -62,20 +57,25 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         place = validated_data.pop('place_obj')
         validated_data.pop('place_id')
         user = self.context['request'].user
+        comment = validated_data.get('comment', '')
 
         with transaction.atomic():
-            review = Review.objects.create(
+            # دریافت یا ایجاد بازخورد کاربر
+            review, created = Review.objects.update_or_create(
                 user=user,
                 place=place,
-                status=ReviewStatus.APPROVED,
-                comment=validated_data.get('comment', '')
+                defaults={
+                    'comment': comment,
+                    'status': ReviewStatus.APPROVED
+                }
             )
 
+            # به‌روزرسانی پاسخ‌ها: پاسخ‌های قدیمی به این سوالات جایگزین می‌شوند
             for item in answers_data:
-                Answer.objects.create(
+                Answer.objects.update_or_create(
                     review=review,
                     question=item['question_obj'],
-                    option=item['option_obj']
+                    defaults={'option': item['option_obj']}
                 )
 
         return review

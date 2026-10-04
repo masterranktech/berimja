@@ -1,14 +1,25 @@
 import random
+import re
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from apps.common.models import TimeStampedModel
+from django.core.exceptions import ValidationError
 
 phone_regex = RegexValidator(
     regex=r'^09\d{9}$',
     message="شماره موبایل باید با ۰۹ شروع شده و ۱۱ رقم باشد."
 )
+
+def validate_display_name(value):
+    """اعتبارسنجی نام نمایشی: حداقل ۳ کاراکتر، بدون استفاده از شماره موبایل و ارقام"""
+    val = value.strip()
+    if len(val) < 3:
+        raise ValidationError('نام نمایشی باید حداقل ۳ کاراکتر باشد.')
+    # جلوگیری از وارد کردن شماره تلفن یا فرمت‌های مشابه موبایل
+    if re.search(r'09\d{9}', val) or re.search(r'\d{7,}', val):
+        raise ValidationError('استفاده از شماره تماس به عنوان نام نمایشی مجاز نیست.')
 
 
 class CustomUserManager(BaseUserManager):
@@ -48,9 +59,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     )
     display_name = models.CharField(
         max_length=100,
-        blank=True,
-        null=True,
-        verbose_name="نام نمایشی"
+        validators=[validate_display_name],
+        verbose_name="نام و نام خانوادگی / نام مستعار"
     )
     is_blocked = models.BooleanField(
         default=False,
@@ -68,7 +78,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['display_name']
 
     class Meta:
         verbose_name = "کاربر"
@@ -76,7 +86,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     def __str__(self):
         return self.display_name or self.phone_number
-
 
 class OTPRequest(TimeStampedModel):
     """مدل ذخیره کد یکبار مصرف پیامکی برای ورود و ثبت‌نام."""

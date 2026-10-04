@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (
+from .views_web import (
     home_page_view,
     place_detail_page_view,
     place_questionnaire_page_view,

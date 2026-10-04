@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}انتخاب نام نمایشی | بریم‌جا{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{# حذف هدر و فوتر سراسری #}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page-container">
+  <div class="auth-brand-center">
+    <a href="{% url 'places_web:home' %}" title="بریم‌جا">
+      <img src="{% static 'images/logo.svg' %}" alt="بریم‌جا" width="52" height="52">
+      <h1 class="auth-brand-text">بریم‌جا</h1>
+    </a>
+  </div>
+
+  <div class="auth-modal-card">
+    <div class="auth-modal-header">
+      <h2>ثبت‌نام و انتخاب نام</h2>
+      <p>لطفاً یک نام یا عنوان مستعار برای نمایش در نظرات و پروفایل خود انتخاب کنید.</p>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="auth-error-msg">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="auth-input-group">
+        <label for="id_name">نام یا لقب شما:</label>
+        <input 
+          type="text" 
+          name="display_name" 
+          id="id_name" 
+          placeholder="مثال: آرش، مریم راد، رهگذر" 
+          minlength="3" 
+          maxlength="50" 
+          required 
+          autofocus
+        >
+      </div>
+
+      <button type="submit" class="btn-auth-submit">تکمیل ثبت‌نام و ورود</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

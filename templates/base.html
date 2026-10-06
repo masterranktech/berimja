@@ -26,33 +26,42 @@
 <body>
 
   <!-- هدر مشترک سایت -->
-  {% block site_header %}
-  <header class="main-header">
-    <div class="container header-container">
-      <a href="{% url 'places_web:home' %}" class="brand-logo">
-        <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا" width="36" height="36">
-        <span class="brand-name">بریم‌جا</span>
-      </a>
+{% block site_header %}
+<header class="site-header">
+    <div class="header-island">
 
-      <div class="header-actions">
-        {% if user.is_authenticated %}
-          <div class="user-badge">
-            <i data-lucide="user"></i>
-            <span>{{ user.display_name|default:user.phone_number }}</span>
-            <a href="{% url 'accounts_web:logout' %}" style="margin-right: 0.5rem; color: var(--color-primary);" title="خروج">
-              <i data-lucide="log-out"></i>
+        <!-- Logo -->
+        <a href="/" class="site-logo">
+            <img src="/static/images/logo/big.svg" alt="بریم‌جا">
+            <span>بریم‌جا</span>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <a href="/" class="nav-link active">خانه</a>
+            <a href="/places" class="nav-link">مکان‌ها</a>
+            <a href="/categories" class="nav-link">دسته‌بندی‌ها</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+
+            <!-- Search -->
+            <button class="search-button" type="button">
+                <span class="search-icon">⌕</span>
+                <span>جستجو</span>
+            </button>
+
+            <!-- Login -->
+            <a href="/login" class="login-button">
+                ورود
             </a>
-          </div>
-        {% else %}
-          <a href="{% url 'accounts_web:login_phone' %}" class="btn-primary-outline">
-            <i data-lucide="log-in"></i>
-            <span>ورود / ثبت‌نام</span>
-          </a>
-        {% endif %}
-      </div>
+
+        </div>
+
     </div>
-  </header>
-  {% endblock site_header %}
+</header>
+{% endblock site_header %}
 
   <!-- بدنه اصلی -->
   <main class="main-content">

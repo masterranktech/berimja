@@ -8,12 +8,8 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section مدرن با افکت Glow و جستجوی شیشه‌ای -->
+<!-- Hero Section مدرن با جستجوی شیشه‌ای -->
 <section class="hero-section">
-    <!-- هاله‌های نوری پس‌زمینه (Glow Effect) -->
-    <div class="hero-glow hero-glow-primary"></div>
-    <div class="hero-glow hero-glow-secondary"></div>
-
     <div class="hero-container">
         <div class="hero-content">
 
@@ -52,7 +48,7 @@
                 </button>
             </form>
 
-            <!-- لینک‌های فیلتر سریع -->
+            <!-- لینک‌های فیلتر سریع هیرو -->
             <div class="hero-quick-links">
                 <span class="quick-links-label">
                     شاید دنبال این باشی:
@@ -60,12 +56,11 @@
 
                 {% if quick_tags %}
                     {% for tag in quick_tags|slice:":5" %}
-                        <a href="{% url 'places_web:home' %}?tag={{ tag.name }}">
+                        <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
                             {{ tag.name }}
                         </a>
                     {% endfor %}
                 {% else %}
-                    <!-- فال‌بک در صورت نبود دیتای داینامیک -->
                     <a href="{% url 'places_web:home' %}?tag=خلوت">خلوت</a>
                     <a href="{% url 'places_web:home' %}?tag=اقتصادی">اقتصادی</a>
                     <a href="{% url 'places_web:home' %}?tag=مناسب قرار">مناسب قرار</a>
@@ -77,12 +72,140 @@
     </div>
 </section>
 
+<!-- نوار دسته‌بندی‌های منتخب (Top Categories) -->
+<section class="categories-section" id="categories-section">
+    <div class="categories-container">
+        <div class="categories-header">
+            <h2 class="categories-title">دسته‌بندی‌های منتخب</h2>
+            <p class="categories-subtitle">مقصدت رو بر اساس پرطرفدارترین موضوعات انتخاب کن</p>
+        </div>
+
+        <div class="categories-grid">
+            <!-- ۱. همه مکان‌ها (ریست دسته‌بندی با حفظ تگ انتخابی) -->
+            <a href="{% url 'places_web:home' %}{% if active_tag %}?tag={{ active_tag }}{% endif %}" class="category-item-card {% if not selected_category %}active{% endif %}">
+                <div class="category-icon-box">
+                    <i data-lucide="layout-grid"></i>
+                </div>
+                <span class="category-name">همه</span>
+            </a>
+
+            <!-- ۲. دسته‌بندی‌های پرکاربرد از دیتابیس -->
+            {% for cat in categories %}
+                <a href="{% url 'places_web:home' %}?category={{ cat.slug }}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+                   class="category-item-card {% if selected_category == cat.slug %}active{% endif %}">
+                    <div class="category-icon-box">
+                        {% if 'cafe' in cat.slug %}
+                            <i data-lucide="coffee"></i>
+                        {% elif 'restaurant' in cat.slug %}
+                            <i data-lucide="utensils"></i>
+                        {% elif 'nature' in cat.slug %}
+                            <i data-lucide="trees"></i>
+                        {% elif 'entertainment' in cat.slug %}
+                            <i data-lucide="gamepad-2"></i>
+                        {% elif 'cinema' in cat.slug %}
+                            <i data-lucide="film"></i>
+                        {% elif 'culture' in cat.slug %}
+                            <i data-lucide="landmark"></i>
+                        {% else %}
+                            <i data-lucide="compass"></i>
+                        {% endif %}
+                    </div>
+                    <span class="category-name">{{ cat.name }}</span>
+                </a>
+            {% empty %}
+                <a href="{% url 'places_web:home' %}?category=cafe" class="category-item-card {% if selected_category == 'cafe' %}active{% endif %}">
+                    <div class="category-icon-box"><i data-lucide="coffee"></i></div>
+                    <span class="category-name">کافه</span>
+                </a>
+                <a href="{% url 'places_web:home' %}?category=restaurant" class="category-item-card {% if selected_category == 'restaurant' %}active{% endif %}">
+                    <div class="category-icon-box"><i data-lucide="utensils"></i></div>
+                    <span class="category-name">رستوران</span>
+                </a>
+            {% endfor %}
+
+            <!-- ۳. دکمه هدایت به سایر دسته‌ها -->
+            <a href="/categories" class="category-item-card category-item-more">
+                <div class="category-icon-box more-box">
+                    <i data-lucide="more-horizontal"></i>
+                </div>
+                <span class="category-name">سایر دسته‌ها</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- نوار فیلترهای حسی و تگ‌های سریع (ترکیب‌پذیر با دسته‌بندی) -->
+<section class="vibe-filter-section" id="places-section">
+    <div class="vibe-container">
+
+        <div class="vibe-header">
+            <span class="vibe-title">
+                <i data-lucide="sliders-horizontal"></i>
+                <span>فیلتر حس‌وحال:</span>
+            </span>
+
+            <!-- وضعیت فیلتر فعال و دکمه ریست سریع -->
+            {% if selected_category or active_tag or search_query %}
+                <div class="active-filter-summary">
+                    {% if selected_category_obj %}
+                        <span class="pill-badge">دسته: {{ selected_category_obj.name }}</span>
+                    {% elif selected_category %}
+                        <span class="pill-badge">دسته: {{ selected_category }}</span>
+                    {% endif %}
+                    {% if active_tag %}
+                        <span class="pill-badge">ویژگی: {{ active_tag }}</span>
+                    {% endif %}
+                    {% if search_query %}
+                        <span class="pill-badge">جستجو: {{ search_query }}</span>
+                    {% endif %}
+                    <a href="{% url 'places_web:home' %}" class="btn-clear-all" title="حذف تمام فیلترها">
+                        <i data-lucide="x"></i>
+                        <span>پاک کردن همه</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- چیپ‌های اسلایدر تگ -->
+        <div class="vibe-chips-slider">
+            <!-- حالت «همه ویژگی‌ها» -->
+            <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+               class="vibe-chip {% if not active_tag %}active{% endif %}">
+                همه حال‌وهواها
+            </a>
+
+            <!-- تگ‌های تجربی -->
+            {% for tag in quick_tags %}
+                {% if active_tag == tag.name %}
+                    <!-- کلیک روی تگ فعال برای لغو انتخاب -->
+                    <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                       class="vibe-chip active">
+                        <span>{{ tag.name }}</span>
+                        <i data-lucide="check"></i>
+                    </a>
+                {% else %}
+                    <!-- کلیک روی تگ همراه با حفظ دسته‌بندی -->
+                    <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}"
+                       class="vibe-chip">
+                        <span>{{ tag.name }}</span>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
 <!-- بخش نمایش لیست مکان‌ها -->
 <section class="container" style="padding-bottom: 4rem;">
   <div class="places-section-header">
     <h2 class="section-title">
-      {% if active_tag %}
+      {% if active_tag and selected_category_obj %}
+        مکان‌های «{{ active_tag }}» در دسته {{ selected_category_obj.name }}
+      {% elif active_tag %}
         مکان‌های دارای تگ «{{ active_tag }}»
+      {% elif selected_category_obj %}
+        مکان‌های دسته‌بندی «{{ selected_category_obj.name }}»
       {% else %}
         منتخب مکان‌های تهران
       {% endif %}
@@ -106,7 +229,61 @@
 
 {% block extra_js %}
 <script>
-  // فعال‌سازی آیکون‌ها پس از رندر کارت‌ها
-  lucide.createIcons();
+// غیرفعال‌سازی اسکرول خودکار مرورگر
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// بازیابی دقیق موقعیت عمودی صفحه
+const savedScroll = sessionStorage.getItem('home_page_scroll');
+if (savedScroll !== null) {
+    window.scrollTo(0, parseInt(savedScroll, 10));
+    sessionStorage.removeItem('home_page_scroll');
+}
+
+// ثبت آخرین موقعیت قبل از رفرش یا جابه‌جایی
+window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('home_page_scroll', window.scrollY.toString());
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // درگ برای اسکرول افقی چیپ‌ها
+    const slider = document.querySelector('.vibe-chips-slider');
+    if (slider) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.style.cursor = 'grabbing';
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.style.cursor = 'default';
+        });
+
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.style.cursor = 'default';
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    // فعال‌سازی سراسری آیکون‌های Lucide
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
 </script>
 {% endblock %}

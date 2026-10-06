@@ -1,36 +1,62 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from apps.places.models import Place
+from django.db.models import Count
+from apps.places.models import Category, Place
 from apps.questions.models import Section
 from apps.reviews.models import Review, ReviewStatus
 from apps.tags.models import Tag
 
 
 def home_page_view(request):
-    """رندر سمت سرور (SSR) صفحه اصلی همراه با تگ‌ها و فیلتر سریع"""
+    """رندر سمت سرور صفحه اصلی همراه با فیلتر ترکیبی دسته‌بندی، تگ‌ها و سرچ متنی"""
+    selected_category = request.GET.get('category', '').strip()
     active_tag = request.GET.get('tag', '').strip()
+    search_query = request.GET.get('q', '').strip()
 
-    # واکشی بهینه مکان‌ها به همراه تگ‌ها، تصاویر و دسته‌ها (جلوگیری از مشکل N+1)
+    selected_category_obj = None
+    if selected_category:
+        selected_category_obj = Category.objects.filter(slug=selected_category, is_active=True).first()
+
+    # ۱. کوئری پایه مکان‌های فعال
     places_qs = Place.objects.filter(is_active=True).prefetch_related(
         'categories',
         'place_tags__tag',
         'images'
     ).order_by('-created_at')
 
-    # اعمال فیلتر سریع در صورت انتخاب کاربر
+    # ۲. اعمال فیلتر دسته‌بندی
+    if selected_category:
+        places_qs = places_qs.filter(categories__slug=selected_category)
+
+    # ۳. اعمال همزمان فیلتر تگ (ترکیب با دسته‌بندی)
     if active_tag:
         places_qs = places_qs.filter(
             place_tags__tag__name=active_tag,
             place_tags__is_active=True
-        ).distinct()
+        )
 
-    # دریافت ۸ تگ پرتکرار و فعال برای فیلترهای سریع بالای صفحه
-    quick_tags = Tag.objects.filter(status='ACTIVE')[:8]
+    # ۴. اعمال جستجوی متنی
+    if search_query:
+        places_qs = places_qs.filter(name__icontains=search_query)
+
+    places_qs = places_qs.distinct()
+
+    # واکشی پرکاربردترین دسته‌ها
+    popular_categories = Category.objects.filter(is_active=True).annotate(
+        places_count=Count('places')
+    ).order_by('-places_count', 'name')[:5]
+
+    # تگ‌های تجربی کلیدی برای نوار فیلتر حسی
+    quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
     context = {
         'places': places_qs,
+        'categories': popular_categories,
+        'selected_category': selected_category,
+        'selected_category_obj': selected_category_obj,
         'quick_tags': quick_tags,
         'active_tag': active_tag,
+        'search_query': search_query,
     }
     return render(request, 'places/home.html', context)
 
@@ -108,3 +134,4 @@ def place_questionnaire_page_view(request, id):
         'user_answers_map': user_answers_map,
     }
     return render(request, 'places/questionnaire.html', context)
+

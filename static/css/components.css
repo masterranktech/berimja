@@ -5,16 +5,11 @@
 .site-header {
     position: sticky;
     top: 18px;
-
     z-index: 1000;
-
     width: 100%;
-
     padding: 18px 20px 0;
-
     pointer-events: none;
 }
-
 
 /* ==========================================================================
    Header Island
@@ -22,87 +17,61 @@
 
 .header-island {
     position: relative;
-
     width: 100%;
     max-width: 1120px;
     min-height: 68px;
-
     margin: 0 auto;
     padding: 0 10px 0 18px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
 
-    /*
-     * Glass effect
-     */
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.82),
-            rgba(255, 255, 255, 0.64)
-        );
+    /* Glass effect */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.82),
+        rgba(255, 255, 255, 0.64)
+    );
 
-    /*
-     * Subtle glass border
-     */
+    /* Subtle glass border */
     border: 1px solid rgba(255, 255, 255, 0.85);
-
     border-radius: 24px;
 
-    /*
-     * Modern soft shadow
-     */
+    /* Modern soft shadow */
     box-shadow:
         0 12px 35px rgba(15, 23, 42, 0.08),
         0 3px 10px rgba(15, 23, 42, 0.04);
 
-    /*
-     * Glass blur
-     */
+    /* Glass blur */
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
 
     pointer-events: auto;
 
-    /*
-     * Smooth transitions
-     */
+    /* Smooth transitions */
     transition:
         box-shadow 0.25s ease,
         background 0.25s ease,
         border-color 0.25s ease;
 }
 
-
-/*
- * Very subtle highlight around the Island
- */
-
+/* Subtle highlight around the Island */
 .header-island::before {
     content: "";
-
     position: absolute;
-
     top: 0;
     right: 12%;
     left: 12%;
-
     height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.95),
-            transparent
-        );
-
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.95),
+        transparent
+    );
     pointer-events: none;
 }
-
 
 /* ==========================================================================
    Logo
@@ -112,15 +81,12 @@
     display: inline-flex;
     align-items: center;
     gap: 9px;
-
-    flex-shrink: 0;
-
+    flex: 1; /* اشغال سهم برابر با بخش چپ */
+    justify-content: flex-start;
     color: var(--text-primary);
     text-decoration: none;
-
     font-size: 1rem;
     font-weight: 700;
-
     transition: opacity 0.2s ease;
 }
 
@@ -131,12 +97,128 @@
 .site-logo img {
     width: 40px;
     height: 40px;
-
     object-fit: contain;
 }
 
 .site-logo span {
     white-space: nowrap;
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-shrink: 0; /* حفظ موقعیت سنتر بدون فشرده شدن */
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Header Actions (Login & Auth State)
+   ========================================================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    flex: 1; /* اشغال سهم برابر با لوگو برای بالانس ماندن منوی وسط */
+    justify-content: flex-end;
+}
+
+
+.login-button {
+    height: 44px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), #f43f5e);
+    border-radius: 16px;
+    color: var(--text-inverse);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ==========================================================================
+   User State Button (طراحی هم‌شکل با دکمه ورود)
+   ========================================================================== */
+
+.user-pill-button {
+    height: 44px;
+    padding: 0 6px 0 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    background: linear-gradient(135deg, var(--color-primary), #f43f5e);
+    border-radius: 16px;
+    color: var(--text-inverse);
+
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-pill-button:hover {
+    box-shadow: 0 6px 18px rgba(225, 29, 72, 0.3);
+}
+
+.user-pill-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: default;
+}
+
+.user-pill-name i {
+    width: 17px;
+    height: 17px;
+}
+
+/* دکمه خروج دایره‌ای مات داخل کپسول */
+.user-pill-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.user-pill-logout:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.05);
+}
+
+.user-pill-logout i {
+    width: 15px;
+    height: 15px;
 }
 
 

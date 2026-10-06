@@ -37,32 +37,35 @@
     <div class="header-island">
 
         <!-- Logo -->
-        <a href="/" class="site-logo">
-            <img src="/static/images/logo/big.svg" alt="بریم‌جا">
+        <a href="{% url 'places_web:home' %}" class="site-logo">
+            <img src="{% static 'images/logo/big.svg' %}" alt="بریم‌جا">
             <span>بریم‌جا</span>
         </a>
 
         <!-- Navigation -->
         <nav class="main-nav">
-            <a href="/" class="nav-link active">خانه</a>
-            <a href="/places" class="nav-link">مکان‌ها</a>
-            <a href="/categories" class="nav-link">دسته‌بندی‌ها</a>
+            <a href="{% url 'places_web:home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">خانه</a>
+            <a href="{% url 'places_web:home' %}#places-section" class="nav-link">مکان‌ها</a>
+            <a href="{% url 'places_web:home' %}#categories-section" class="nav-link">دسته‌بندی‌ها</a>
         </nav>
 
         <!-- Header Actions -->
         <div class="header-actions">
-
-            <!-- Search -->
-            <button class="search-button" type="button">
-                <span class="search-icon">⌕</span>
-                <span>جستجو</span>
-            </button>
-
-            <!-- Login -->
-            <a href="/login" class="login-button">
-                ورود
-            </a>
-
+            {% if user.is_authenticated %}
+                <div class="user-pill-button">
+                    <span class="user-pill-name">
+                        <i data-lucide="user"></i>
+                        <span>{{ user.display_name|default:user.phone_number }}</span>
+                    </span>
+                    <a href="{% url 'accounts_web:logout' %}" class="user-pill-logout" title="خروج از حساب">
+                        <i data-lucide="log-out"></i>
+                    </a>
+                </div>
+            {% else %}
+                <a href="{% url 'accounts_web:login_phone' %}" class="login-button">
+                    ورود
+                </a>
+            {% endif %}
         </div>
 
     </div>

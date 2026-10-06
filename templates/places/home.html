@@ -8,22 +8,78 @@
 {% endblock %}
 
 {% block content %}
-<!-- بخش معرفی و عنوان -->
+<!-- Hero Section -->
 <section class="hero-section">
-  <div class="container">
-    <h1 class="hero-title">امروز کجا بریم؟</h1>
-    <p class="hero-subtitle">تصمیم‌گیری سریع برای رفتن به کافه، رستوران و تفریحات تهران با تکیه بر آمار دقیق و تگ‌های تجربی کاربران.</p>
 
-    <!-- فیلترهای سریع تگ‌ها -->
-    <div class="quick-filters">
-      <a href="{% url 'places_web:home' %}" class="filter-chip {% if not active_tag %}active{% endif %}">همه مقاصد</a>
-      {% for tag in quick_tags %}
-        <a href="?tag={{ tag.name }}" class="filter-chip {% if active_tag == tag.name %}active{% endif %}">
-          {{ tag.name }}
-        </a>
-      {% endfor %}
+    <div class="hero-glow hero-glow-primary"></div>
+    <div class="hero-glow hero-glow-secondary"></div>
+
+    <div class="hero-container">
+
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                انتخاب راحت‌تر، تجربه بهتر
+            </span>
+
+            <h1 class="hero-title">
+                امروز
+                <span>کجا بریم؟</span>
+            </h1>
+
+            <p class="hero-description">
+                جایی پیدا کن که با حال و شرایط الانت جور باشه.
+                تجربه‌های واقعی آدم‌ها رو ببین و راحت‌تر تصمیم بگیر.
+            </p>
+
+            <!-- Main Search -->
+            <form class="hero-search">
+
+                <div class="hero-search-icon">
+                    ⌕
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="دنبال چه جایی می‌گردی؟"
+                    aria-label="جستجوی مکان"
+                >
+
+                <button type="submit">
+                    جستجو
+                </button>
+
+            </form>
+
+            <!-- Quick Search Tags -->
+            <div class="hero-quick-links">
+
+                <span class="quick-links-label">
+                    شاید دنبال این باشی:
+                </span>
+
+                <a href="/places?tag=nearby">
+                    نزدیک من
+                </a>
+
+                <a href="/places?tag=quiet">
+                    خلوت
+                </a>
+
+                <a href="/places?tag=cheap">
+                    اقتصادی
+                </a>
+
+                <a href="/places?tag=date">
+                    مناسب قرار
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
+
 </section>
 
 <!-- بخش نمایش لیست مکان‌ها -->

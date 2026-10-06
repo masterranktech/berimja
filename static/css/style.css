@@ -143,3 +143,56 @@ img, svg {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 }
+
+/* ==========================================================================
+   پس‌زمینه اتمسفریک ملایم و سراسری
+   ========================================================================== */
+
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #f8fafc;
+}
+
+.ambient-orbs-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* کاهش غلظت و افزایش پخش‌شدگی نور دایره‌ها برای محو و ملایم شدن */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px); /* پخش نرم‌تر لبه‌ها */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+  opacity: 0.65; /* ملایم کردن کل درخشش */
+}
+
+/* لایه مات شیشه‌ای ملایم روی دایره‌ها */
+.frosted-glass-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(248, 250, 252, 0.4);
+}
+
+/* شفاف‌سازی بخش‌های اصلی بدنه تا دایره‌ها زیر همه سکشن‌ها جریان داشته باشند */
+.main-content,
+main,
+section {
+  position: relative;
+  z-index: 1;
+  background-color: transparent !important;
+}

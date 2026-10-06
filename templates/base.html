@@ -25,6 +25,12 @@
 </head>
 <body>
 
+<!-- پس‌زمینه پویا با هاله‌های نوری شناور و لایه مات سراسری -->
+<div class="ambient-background" aria-hidden="true">
+  <div class="ambient-orbs-container" id="ambient-orbs"></div>
+  <div class="frosted-glass-overlay"></div>
+</div>
+
   <!-- هدر مشترک سایت -->
 {% block site_header %}
 <header class="site-header">
@@ -80,6 +86,8 @@
 
   <!-- اسکریپت کنترل مودال و وضعیت نشست -->
   <script src="{% static 'js/auth-modal.js' %}"></script>
+
+    <script src="{% static 'js/ambient-orbs.js' %}"></script>
 
   <!-- اسکریپت لوکال آیکون‌های Lucide -->
   <script src="{% static 'js/lucide.min.js' %}"></script>

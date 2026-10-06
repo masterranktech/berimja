@@ -336,8 +336,10 @@
 
 /* کامپوننت فوتر */
 .main-footer {
-  background-color: var(--bg-surface);
-  border-top: 1px solid var(--border-base);
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(226, 232, 240, 0.7);
   padding: 1.5rem 0;
   margin-top: 3rem;
   text-align: center;

@@ -8,17 +8,17 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section مدرن با افکت Glow و جستجوی شیشه‌ای -->
 <section class="hero-section">
-
+    <!-- هاله‌های نوری پس‌زمینه (Glow Effect) -->
     <div class="hero-glow hero-glow-primary"></div>
     <div class="hero-glow hero-glow-secondary"></div>
 
     <div class="hero-container">
-
         <div class="hero-content">
 
             <span class="hero-badge">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px; margin-left: 6px;"></i>
                 انتخاب راحت‌تر، تجربه بهتر
             </span>
 
@@ -28,58 +28,53 @@
             </h1>
 
             <p class="hero-description">
-                جایی پیدا کن که با حال و شرایط الانت جور باشه.
+                جایی پیدا کن که با حال و شرایط الانِت جور باشه.
                 تجربه‌های واقعی آدم‌ها رو ببین و راحت‌تر تصمیم بگیر.
             </p>
 
-            <!-- Main Search -->
-            <form class="hero-search">
-
+            <!-- فرم اصلی جستجو متصل به جنگو -->
+            <form action="{% url 'places_web:home' %}" method="GET" class="hero-search">
                 <div class="hero-search-icon">
-                    ⌕
+                    <i data-lucide="search" style="width: 22px; height: 22px;"></i>
                 </div>
 
                 <input
                     type="text"
-                    placeholder="دنبال چه جایی می‌گردی؟"
+                    name="q"
+                    value="{{ search_query|default:'' }}"
+                    placeholder="دنبال چه جایی می‌گردی؟ کافه، رستوران یا منطقه..."
                     aria-label="جستجوی مکان"
+                    autocomplete="off"
                 >
 
                 <button type="submit">
                     جستجو
                 </button>
-
             </form>
 
-            <!-- Quick Search Tags -->
+            <!-- لینک‌های فیلتر سریع -->
             <div class="hero-quick-links">
-
                 <span class="quick-links-label">
                     شاید دنبال این باشی:
                 </span>
 
-                <a href="/places?tag=nearby">
-                    نزدیک من
-                </a>
-
-                <a href="/places?tag=quiet">
-                    خلوت
-                </a>
-
-                <a href="/places?tag=cheap">
-                    اقتصادی
-                </a>
-
-                <a href="/places?tag=date">
-                    مناسب قرار
-                </a>
-
+                {% if quick_tags %}
+                    {% for tag in quick_tags|slice:":5" %}
+                        <a href="{% url 'places_web:home' %}?tag={{ tag.name }}">
+                            {{ tag.name }}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <!-- فال‌بک در صورت نبود دیتای داینامیک -->
+                    <a href="{% url 'places_web:home' %}?tag=خلوت">خلوت</a>
+                    <a href="{% url 'places_web:home' %}?tag=اقتصادی">اقتصادی</a>
+                    <a href="{% url 'places_web:home' %}?tag=مناسب قرار">مناسب قرار</a>
+                    <a href="{% url 'places_web:home' %}?tag=فضای باز">فضای باز</a>
+                {% endif %}
             </div>
 
         </div>
-
     </div>
-
 </section>
 
 <!-- بخش نمایش لیست مکان‌ها -->

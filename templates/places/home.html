@@ -175,28 +175,51 @@
     </div>
 </section>
 
-<!-- بخش نمایش لیست مکان‌ها -->
+<!-- بخش نمایش لیست مکان‌ها همراه با تب‌های ویترین -->
 <section class="container" style="padding-bottom: 4rem;">
+
+  <!-- نوار تب‌های تفکیکی ویترین (Featured Tabs) -->
+  <div class="showcase-tabs-wrapper">
+    <div class="showcase-tabs">
+      <a href="{% url 'places_web:home' %}?tab=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+         class="showcase-tab {% if active_tab == 'popular' %}active{% endif %}">
+        <span class="tab-icon">🔥</span>
+        <span>محبوب‌ترین‌ها</span>
+      </a>
+
+      <a href="{% url 'places_web:home' %}?tab=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+         class="showcase-tab {% if active_tab == 'latest' %}active{% endif %}">
+        <span class="tab-icon">✨</span>
+        <span>جدیدترین‌ها</span>
+      </a>
+
+      <a href="{% url 'places_web:home' %}?tab=cozy{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+         class="showcase-tab {% if active_tab == 'cozy' %}active{% endif %}">
+        <span class="tab-icon">🤫</span>
+        <span>پاتوق‌های دنج و خلوت</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- هدر اطلاعاتی لیست -->
   <div class="places-section-header">
     <div>
       <h2 class="section-title">
-        {% if active_tag and selected_category_obj %}
-          مکان‌های «{{ active_tag }}» در دسته {{ selected_category_obj.name }}
-        {% elif active_tag %}
-          مکان‌های دارای تگ «{{ active_tag }}»
-        {% elif selected_category_obj %}
-          مکان‌های دسته‌بندی «{{ selected_category_obj.name }}»
-        {% elif search_query %}
-          نتایج جستجو برای «{{ search_query }}»
+        {% if active_tab == 'cozy' %}
+          پاتوق‌های دنج و آرام تهران
+        {% elif active_tab == 'latest' %}
+          جدیدترین مکان‌های ثبت‌شده
         {% else %}
-          منتخب و جدیدترین مکان‌های تهران
+          محبوب‌ترین و پربازخوردترین مکان‌ها
         {% endif %}
       </h2>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
-        {% if not has_filter %}
-          نمایش گزینه‌های برگزیده برای تصمیم‌گیری سریع‌تر
+        {% if active_tab == 'cozy' %}
+          مکان‌هایی با بالاترین درصد آرامش و فضای خلوت به انتخاب کاربران
+        {% elif active_tab == 'latest' %}
+          تازه‌ترین مکان‌های اضافه‌شده به بریم‌جا
         {% else %}
-          مکان‌های منطبق با فیلترهای انتخابی شما
+          مکان‌هایی که بیشترین میزان رضایت و بازخورد را داشته‌اند
         {% endif %}
       </p>
     </div>
@@ -206,19 +229,19 @@
     </span>
   </div>
 
+  <!-- گرید کارت‌های مکان -->
   <div class="places-grid">
     {% for place in places %}
       {% include 'includes/place_card.html' with place=place %}
     {% empty %}
       <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
         <i data-lucide="map-pin-off" style="width: 3rem; height: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-        <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی با مشخصات انتخابی یافت نشد.</p>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی در این تب یافت نشد.</p>
         <a href="{% url 'places_web:home' %}" class="btn-primary-outline" style="margin-top: 1rem;">مشاهده همه مکان‌ها</a>
       </div>
     {% endfor %}
   </div>
 
-  <!-- دکمه هدایت به آرشیو کامل در صورت زیاد بودن گزینه‌ها -->
   {% if total_count > places|length %}
     <div style="text-align: center; margin-top: 2.5rem;">
       <a href="/places" class="btn-load-more">

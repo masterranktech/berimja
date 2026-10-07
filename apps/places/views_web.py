@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from apps.places.models import Category, Place
 from apps.questions.models import Section
 from apps.reviews.models import Review, ReviewStatus
@@ -8,60 +8,75 @@ from apps.tags.models import Tag
 
 
 def home_page_view(request):
-    """رندر سمت سرور صفحه اصلی همراه با فیلتر ترکیبی دسته‌بندی، تگ‌ها و سرچ متنی"""
+    """رندر سمت سرور صفحه اصلی همراه با فیلتر ترکیبی دسته‌بندی، تگ‌ها، سرچ متنی و تب‌های ویترین"""
     selected_category = request.GET.get('category', '').strip()
     active_tag = request.GET.get('tag', '').strip()
     search_query = request.GET.get('q', '').strip()
+    active_tab = request.GET.get('tab', 'popular').strip()  # پیش‌فرض: محبوب‌ترین‌ها
 
     selected_category_obj = None
     if selected_category:
         selected_category_obj = Category.objects.filter(slug=selected_category, is_active=True).first()
 
-    # ۱. کوئری پایه مکان‌های فعال همراه با واکشی روابط
+    # ۱. کوئری پایه مکان‌های فعال
     places_qs = Place.objects.filter(is_active=True).prefetch_related(
         'categories',
         'place_tags__tag',
         'images'
-    ).order_by('-created_at')
+    )
 
-    # ۲. اعمال فیلتر دسته‌بندی
+    # ۲. فیلتر تب‌های تعاملی ویترین
+    if active_tab == 'latest':
+        # جدیدترین‌ها
+        places_qs = places_qs.order_by('-created_at')
+    elif active_tab == 'cozy':
+        # پاتوق‌های دنج و خلوت (دارای تگ فعال خلوت یا دنج)
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['خلوت', 'دنج', 'خلوت و آرام'],
+            place_tags__is_active=True
+        ).order_by('-place_tags__strength', '-created_at')
+    else:
+        # محبوب‌ترین‌ها (بر اساس تعداد بازخوردهای تاییدشده)
+        active_tab = 'popular'
+        places_qs = places_qs.annotate(
+            approved_reviews_count=Count('reviews', filter=Q(reviews__status='APPROVED'))
+        ).order_by('-approved_reviews_count', '-created_at')
+
+    # ۳. اعمال فیلتر دسته‌بندی (در صورت انتخاب)
     if selected_category:
         places_qs = places_qs.filter(categories__slug=selected_category)
 
-    # ۳. اعمال همزمان فیلتر تگ (ترکیب با دسته‌بندی)
+    # ۴. اعمال فیلتر تگ تجربی
     if active_tag:
         places_qs = places_qs.filter(
             place_tags__tag__name=active_tag,
             place_tags__is_active=True
         )
 
-    # ۴. اعمال جستجوی متنی
+    # ۵. جستجوی متنی
     if search_query:
         places_qs = places_qs.filter(name__icontains=search_query)
 
     places_qs = places_qs.distinct()
 
-    # ۵. کنترل تعداد موارد نمایشی جهت بهینه‌سازی تجربه کاربری
     has_filter = bool(selected_category or active_tag or search_query)
     total_count = places_qs.count()
 
-    if not has_filter:
-        places_list = places_qs[:6]
-    else:
-        places_list = places_qs[:12]
+    # نمایش ۶ مکان منتخب
+    places_list = places_qs[:6] if not has_filter else places_qs[:12]
 
-    # ۶. واکشی پرکاربردترین دسته‌ها
+    # ۶. واکشی دسته‌بندی‌های پرکاربرد
     popular_categories = Category.objects.filter(is_active=True).annotate(
         places_count=Count('places')
     ).order_by('-places_count', 'name')[:5]
 
-    # ۷. تگ‌های تجربی فعال برای نوار فیلتر حسی
     quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
     context = {
         'places': places_list,
         'total_count': total_count,
         'has_filter': has_filter,
+        'active_tab': active_tab,
         'categories': popular_categories,
         'selected_category': selected_category,
         'selected_category_obj': selected_category_obj,

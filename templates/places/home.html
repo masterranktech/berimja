@@ -47,27 +47,6 @@
                     جستجو
                 </button>
             </form>
-
-            <!-- لینک‌های فیلتر سریع هیرو -->
-            <div class="hero-quick-links">
-                <span class="quick-links-label">
-                    شاید دنبال این باشی:
-                </span>
-
-                {% if quick_tags %}
-                    {% for tag in quick_tags|slice:":5" %}
-                        <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}">
-                            {{ tag.name }}
-                        </a>
-                    {% endfor %}
-                {% else %}
-                    <a href="{% url 'places_web:home' %}?tag=خلوت">خلوت</a>
-                    <a href="{% url 'places_web:home' %}?tag=اقتصادی">اقتصادی</a>
-                    <a href="{% url 'places_web:home' %}?tag=مناسب قرار">مناسب قرار</a>
-                    <a href="{% url 'places_web:home' %}?tag=فضای باز">فضای باز</a>
-                {% endif %}
-            </div>
-
         </div>
     </div>
 </section>
@@ -199,18 +178,32 @@
 <!-- بخش نمایش لیست مکان‌ها -->
 <section class="container" style="padding-bottom: 4rem;">
   <div class="places-section-header">
-    <h2 class="section-title">
-      {% if active_tag and selected_category_obj %}
-        مکان‌های «{{ active_tag }}» در دسته {{ selected_category_obj.name }}
-      {% elif active_tag %}
-        مکان‌های دارای تگ «{{ active_tag }}»
-      {% elif selected_category_obj %}
-        مکان‌های دسته‌بندی «{{ selected_category_obj.name }}»
-      {% else %}
-        منتخب مکان‌های تهران
-      {% endif %}
-    </h2>
-    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ places|length }} مکان یافت شد</span>
+    <div>
+      <h2 class="section-title">
+        {% if active_tag and selected_category_obj %}
+          مکان‌های «{{ active_tag }}» در دسته {{ selected_category_obj.name }}
+        {% elif active_tag %}
+          مکان‌های دارای تگ «{{ active_tag }}»
+        {% elif selected_category_obj %}
+          مکان‌های دسته‌بندی «{{ selected_category_obj.name }}»
+        {% elif search_query %}
+          نتایج جستجو برای «{{ search_query }}»
+        {% else %}
+          منتخب و جدیدترین مکان‌های تهران
+        {% endif %}
+      </h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+        {% if not has_filter %}
+          نمایش گزینه‌های برگزیده برای تصمیم‌گیری سریع‌تر
+        {% else %}
+          مکان‌های منطبق با فیلترهای انتخابی شما
+        {% endif %}
+      </p>
+    </div>
+
+    <span style="font-size: 0.85rem; color: var(--text-muted);">
+      نمایش {{ places|length }} از {{ total_count }} مکان
+    </span>
   </div>
 
   <div class="places-grid">
@@ -224,6 +217,16 @@
       </div>
     {% endfor %}
   </div>
+
+  <!-- دکمه هدایت به آرشیو کامل در صورت زیاد بودن گزینه‌ها -->
+  {% if total_count > places|length %}
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a href="/places" class="btn-load-more">
+        <span>مشاهده همه مکان‌های تهران ({{ total_count }})</span>
+        <i data-lucide="arrow-left"></i>
+      </a>
+    </div>
+  {% endif %}
 </section>
 {% endblock %}
 

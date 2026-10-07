@@ -164,46 +164,6 @@
 }
 
 /* ==========================================================================
-   Hero Quick Links
-   ========================================================================== */
-
-.hero-quick-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 22px;
-}
-
-.quick-links-label {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    margin-left: 4px;
-}
-
-.hero-quick-links a {
-    padding: 6px 12px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-full);
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 500;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-}
-
-.hero-quick-links a:hover {
-    color: var(--color-primary);
-    background-color: var(--color-primary-light);
-    border-color: var(--color-primary-subtle);
-    transform: translateY(-1px);
-}
-
-/* ==========================================================================
    Mobile Responsive
    ========================================================================== */
 
@@ -695,6 +655,41 @@
 .tag-empty {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+/* دکمه مشاهده همه مکان‌ها */
+.btn-load-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.btn-load-more:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.12);
+}
+
+.btn-load-more i {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.btn-load-more:hover i {
+  transform: translateX(-3px);
 }
 
 /* فوتر کارت */

@@ -17,7 +17,7 @@ def home_page_view(request):
     if selected_category:
         selected_category_obj = Category.objects.filter(slug=selected_category, is_active=True).first()
 
-    # ۱. کوئری پایه مکان‌های فعال
+    # ۱. کوئری پایه مکان‌های فعال همراه با واکشی روابط
     places_qs = Place.objects.filter(is_active=True).prefetch_related(
         'categories',
         'place_tags__tag',
@@ -41,16 +41,27 @@ def home_page_view(request):
 
     places_qs = places_qs.distinct()
 
-    # واکشی پرکاربردترین دسته‌ها
+    # ۵. کنترل تعداد موارد نمایشی جهت بهینه‌سازی تجربه کاربری
+    has_filter = bool(selected_category or active_tag or search_query)
+    total_count = places_qs.count()
+
+    if not has_filter:
+        places_list = places_qs[:6]
+    else:
+        places_list = places_qs[:12]
+
+    # ۶. واکشی پرکاربردترین دسته‌ها
     popular_categories = Category.objects.filter(is_active=True).annotate(
         places_count=Count('places')
     ).order_by('-places_count', 'name')[:5]
 
-    # تگ‌های تجربی کلیدی برای نوار فیلتر حسی
+    # ۷. تگ‌های تجربی فعال برای نوار فیلتر حسی
     quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
     context = {
-        'places': places_qs,
+        'places': places_list,
+        'total_count': total_count,
+        'has_filter': has_filter,
         'categories': popular_categories,
         'selected_category': selected_category,
         'selected_category_obj': selected_category_obj,

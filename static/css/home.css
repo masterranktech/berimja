@@ -538,27 +538,31 @@
 
 /* ساختار کارت مکان */
 .place-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-radius: var(--radius-md);
+  position: relative;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .place-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-primary-subtle);
+  box-shadow: 0 16px 35px rgba(225, 29, 72, 0.1);
+  border-color: rgba(225, 29, 72, 0.3);
 }
 
 .card-media {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 205px;
   background-color: var(--bg-muted);
+  overflow: hidden;
 }
 
 .card-media img {
@@ -567,22 +571,103 @@
   object-fit: cover;
 }
 
-.card-badges {
+.place-card:hover .card-media img {
+  transform: scale(1.04);
+}
+
+/* لایه سایه‌روشن ملایم روی عکس */
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, transparent 40%, rgba(15, 23, 42, 0.4) 100%);
+  pointer-events: none;
+}
+
+.card-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.card-status-badge {
   position: absolute;
   top: 12px;
   right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2;
+}
+
+/* حالت باز با پالس سبز */
+.card-status-badge.status-open {
+  background: rgba(20, 83, 45, 0.75);
+  color: #86efac;
+  border: 1px solid rgba(134, 239, 172, 0.4);
+}
+
+.card-status-badge.status-open .status-pulse-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #22c55e;
+}
+
+.card-status-badge.status-open .status-pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background-color: rgba(34, 197, 94, 0.6);
+  animation: pulse-ring 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  70% { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* حالت بسته */
+.card-status-badge.status-closed {
+  background: rgba(15, 23, 42, 0.75);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-status-badge.status-closed .status-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+}
+
+.card-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
   display: flex;
   gap: 0.4rem;
+  z-index: 2;
 }
 
 .badge-category {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(4px);
-  color: var(--text-inverse);
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 500;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 4px 9px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .card-body {
@@ -628,11 +713,75 @@
   line-height: 1.4;
 }
 
-/* چیپ‌های تگ تجربی */
+/* ==========================================================================
+   بج‌های تگ تجربی بازطراحی‌شده و تفکیک‌شده (خوانا و بدون چسبیدگی متن)
+   ========================================================================== */
+
 .card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 8px 10px; /* افزایش فاصله بین تگ‌ها از جهت افقی و عمودی */
+  margin-top: 12px;
+}
+
+.vibe-metric-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px; /* فاصله مشخص بین متن تگ و بج درصد */
+  background: rgba(255, 241, 242, 0.75);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: var(--radius-full);
+  padding: 4px 10px 4px 4px; /* پدینگ متعادل از بالا و پایین برای تنفس متن */
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vibe-metric-pill:hover {
+  transform: translateY(-2px);
+  border-color: rgba(225, 29, 72, 0.4);
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.08);
+}
+
+/* نام ویژگی / تگ */
+.metric-name {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.4; /* تنظیم خط برای رفع چسبیدگی به لبه بالا */
+  display: flex;
+  align-items: center;
+}
+
+/* کپسول مستقل و برجسته درصد */
+.metric-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  direction: ltr; /* جلوگیری از به هم ریختن علامت درصد در کنار ارقام */
+}
+
+/* رنگ‌بندی تفکیکی بر اساس میزان قدرت آماری */
+.metric-value.high {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
+}
+
+.metric-value.medium {
+  background-color: #f97316;
+  color: #ffffff;
+}
+
+.metric-value.low {
+  background-color: #e2e8f0;
+  color: #475569;
 }
 
 .tag-chip {

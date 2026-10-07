@@ -1,15 +1,23 @@
 {% load static %}
 <article class="place-card">
-  <!-- تصویر و نشانگر وضعیت -->
+  <!-- تصویر و نشانگرهای شناور -->
   <div class="card-media">
-    <a href="{% url 'places_web:place_detail' place.id %}">
+    <a href="{% url 'places_web:place_detail' place.id %}" class="card-image-link">
       {% if place.cover_image %}
         <img src="{{ place.cover_image.image.url }}" alt="{{ place.name }}" loading="lazy">
       {% else %}
         <img src="{% static 'images/placeholder.svg' %}" alt="{{ place.name }}">
       {% endif %}
+      <div class="card-image-overlay"></div>
     </a>
 
+    <!-- وضعیت فعالیت در لحظه (پالس چشمک‌زن) -->
+    <div class="card-status-badge {% if place.is_open_now %}status-open{% else %}status-closed{% endif %}">
+      <span class="status-pulse-dot"></span>
+      <span class="status-text">{% if place.is_open_now %}اکنون باز است{% else %}بسته است{% endif %}</span>
+    </div>
+
+    <!-- دسته‌بندی مکان -->
     <div class="card-badges">
       {% for cat in place.categories.all %}
         <span class="badge-category">{{ cat.name }}</span>
@@ -33,22 +41,24 @@
 
     <p class="card-address">{{ place.address|truncatechars:55 }}</p>
 
-    <!-- تگ‌های تجربی و آماری بریم‌جا -->
+    <!-- تگ‌های تجربی با بج‌های درصدی خوانا و تفکیک‌شده -->
     <div class="card-tags">
       {% for pt in place.place_tags.all %}
         {% if pt.is_active and pt.tag.status == 'ACTIVE' %}
-          <span class="tag-chip" title="درصد اطمینان: {{ pt.strength }}٪">
-            <span class="tag-name">{{ pt.tag.name }}</span>
-            <span class="tag-percent">{{ pt.strength }}٪</span>
-          </span>
+          <div class="vibe-metric-pill" title="درصد اطمینان تجربی کاربران: {{ pt.strength }}٪">
+            <span class="metric-name">{{ pt.tag.name }}</span>
+            <span class="metric-value {% if pt.strength >= 80 %}high{% elif pt.strength >= 50 %}medium{% else %}low{% endif %}">
+              {{ pt.strength }}٪
+            </span>
+          </div>
         {% endif %}
       {% empty %}
-        <span class="tag-empty">هنوز بازخوردی ثبت نشده است</span>
+        <span class="tag-empty">هنوز داده تجربی ثبت نشده است</span>
       {% endfor %}
     </div>
   </div>
 
-  <!-- فوتر کارت (ساعت کاری و دکمه جزئیات) -->
+  <!-- فوتر کارت -->
   <div class="card-footer">
     <div class="card-hours">
       <i data-lucide="clock"></i>

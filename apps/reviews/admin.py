@@ -29,3 +29,17 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ('place', 'user', 'report_type', 'reason', 'status', 'created_at')
     list_filter = ('report_type', 'status')
     search_fields = ('place__name', 'user__phone_number', 'reason', 'description')
+
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'report_type', 'get_target_place', 'user', 'status', 'created_at')
+    list_filter = ('report_type', 'status', 'created_at')
+    search_fields = ('reason', 'description', 'user__phone_number', 'place__name')
+    readonly_fields = ('created_at', 'updated_at')
+
+    @admin.display(description='مکان / موضوع')
+    def get_target_place(self, obj):
+        if obj.place:
+            return obj.place.name
+        return "✨ پیشنهاد مکان جدید (مستقل)"

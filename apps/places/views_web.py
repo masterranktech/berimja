@@ -259,7 +259,6 @@ from apps.reviews.models import Report, ReportType, ReportStatus
 
 def suggest_place_page_view(request):
     """صفحه اختصاصی و مستقل معرفی و پیشنهاد مکان جدید توسط کاربر"""
-    # بررسی لاگین بودن کاربر
     if not request.user.is_authenticated:
         messages.info(request, 'برای معرفی مکان جدید، لطفاً ابتدا وارد حساب کاربری خود شوید.')
         return redirect(f"/accounts/login/?next={request.path}")
@@ -278,18 +277,19 @@ def suggest_place_page_view(request):
                 'form_data': request.POST
             })
 
-        # ارجاع به اولین مکان فعال سیستم جهت ثبت گزارش پیشنهاد
-        fallback_place = Place.objects.filter(is_active=True).first()
-        if not fallback_place:
-            messages.error(request, 'خطایی در ارتباط با دیتابیس رخ داد.')
-            return render(request, 'places/suggest_place.html')
-
         reason_text = f"پیشنهاد مکان جدید: {name} ({district})"
-        description_text = f"نام مکان: {name}\nدسته‌بندی: {category}\nمنطقه: {district}\nنشانی: {address}\nتوضیحات و ویژگی‌ها: {notes}"
+        description_text = (
+            f"نام مکان: {name}\n"
+            f"دسته‌بندی: {category}\n"
+            f"منطقه / محله: {district}\n"
+            f"نشانی دقیق: {address}\n"
+            f"توضیحات و ویژگی‌ها: {notes}"
+        )
 
+        # ثبت پیشنهاد کاملاً مستقل و بدون اتصال به مکان‌های قبلی
         Report.objects.create(
             user=request.user,
-            place=fallback_place,
+            place=None,  # <--- بدون مکان مرتبط
             report_type=ReportType.SUGGESTION,
             reason=reason_text[:200],
             description=description_text,

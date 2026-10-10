@@ -100,6 +100,8 @@ class Report(TimeStampedModel):
         Place,
         on_delete=models.CASCADE,
         related_name='reports',
+        null=True,
+        blank=True,
         verbose_name="مکان مرتبط"
     )
     report_type = models.CharField(

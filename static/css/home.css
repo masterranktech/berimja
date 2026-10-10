@@ -349,6 +349,97 @@
 }
 
 /* ==========================================================================
+   فیلتر ۳ سطح قیمتی (Price Level Filter)
+   ========================================================================== */
+
+.price-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1120px;
+  margin: 0 auto 1.5rem auto;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+}
+
+.price-filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.price-filter-label i {
+  width: 15px;
+  height: 15px;
+  color: var(--color-primary);
+}
+
+.price-chips-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.price-chips-container::-webkit-scrollbar {
+  display: none;
+}
+
+.price-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 1px solid var(--border-base);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.price-chip .price-tier-symbol {
+  font-size: 0.65rem;
+}
+
+.price-chip:hover {
+  border-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.price-chip.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(225, 29, 72, 0.2);
+}
+
+@media (max-width: 640px) {
+  .price-filter-bar {
+    border-radius: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+}
+
+/* ==========================================================================
    نوار آمار زنده و اعتبار پلتفرم (Enhanced Social Proof Cards)
    ========================================================================== */
 

@@ -272,6 +272,15 @@
                     {% if search_query %}
                         <span class="pill-badge">جستجو: {{ search_query }}</span>
                     {% endif %}
+
+                {% if selected_price %}
+    <span class="pill-badge">
+      قیمت:
+      {% if selected_price == 'economic' %}اقتصادی
+      {% elif selected_price == 'medium' %}متوسط
+      {% elif selected_price == 'luxury' %}لوکس و خاص{% endif %}
+    </span>
+{% endif %}
                     <a href="{% url 'places_web:home' %}" class="btn-clear-all" title="حذف تمام فیلترها">
                         <i data-lucide="x"></i>
                         <span>پاک کردن همه</span>
@@ -339,6 +348,43 @@
     </div>
   </div>
   {% endif %}
+
+<!-- نوار ۳ سطح قیمتی (Price Level Indicator) -->
+  <div class="price-filter-bar">
+    <div class="price-filter-label">
+      <i data-lucide="wallet"></i>
+      <span>سطح قیمت:</span>
+    </div>
+
+    <div class="price-chips-container">
+      <!-- گزینه همه قیمت‌ها (حذف فیلتر قیمت با حفظ بقیه فیلترها) -->
+      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="price-chip {% if not selected_price %}active{% endif %}">
+        همه
+      </a>
+
+      <!-- ۱. اقتصادی -->
+      <a href="{% url 'places_web:home' %}?price=economic&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="price-chip {% if selected_price == 'economic' %}active{% endif %}">
+        <span class="price-tier-symbol">🟢</span>
+        <span>اقتصادی</span>
+      </a>
+
+      <!-- ۲. متوسط -->
+      <a href="{% url 'places_web:home' %}?price=medium&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="price-chip {% if selected_price == 'medium' %}active{% endif %}">
+        <span class="price-tier-symbol">🟡</span>
+        <span>متوسط</span>
+      </a>
+
+      <!-- ۳. لوکس و گران -->
+      <a href="{% url 'places_web:home' %}?price=luxury&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="price-chip {% if selected_price == 'luxury' %}active{% endif %}">
+        <span class="price-tier-symbol">🔴</span>
+        <span>لوکس و خاص</span>
+      </a>
+    </div>
+  </div>
 
   <!-- نوار تب‌های تفکیکی ویترین (Featured Tabs) -->
   <div class="showcase-tabs-wrapper">

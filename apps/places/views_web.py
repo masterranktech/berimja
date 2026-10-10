@@ -15,8 +15,9 @@ def home_page_view(request):
     active_tab = request.GET.get('tab', 'popular').strip() or 'popular'
     selected_collection = request.GET.get('collection', '').strip()
     selected_district = request.GET.get('district', '').strip()
+    selected_price = request.GET.get('price', '').strip()  # <--- فیلتر جدید سطح قیمت
 
-    # ۱. استخراج شیء دسته‌بندی برای نمایش نام فارسی در هدر و فیلترها
+    # ۱. استخراج شیء دسته‌بندی
     selected_category_obj = None
     if selected_category:
         selected_category_obj = Category.objects.filter(slug=selected_category, is_active=True).first()
@@ -28,22 +29,39 @@ def home_page_view(request):
         'images'
     )
 
-    # ۳. اعمال فیلتر دسته‌بندی
+    # ۳. اعمال فیلتر سطح قیمت بر اساس تگ‌های معنایی مدل
+    if selected_price == 'economic':
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['اقتصادی', 'اقتصادی و دانشجویی'],
+            place_tags__is_active=True
+        )
+    elif selected_price == 'medium':
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['قیمت متوسط', 'متوسط', 'متوسط و معقول'],
+            place_tags__is_active=True
+        )
+    elif selected_price == 'luxury':
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['گران و لوکس', 'گران'],
+            place_tags__is_active=True
+        )
+
+    # ۴. اعمال فیلتر دسته‌بندی
     if selected_category:
         places_qs = places_qs.filter(categories__slug=selected_category)
 
-    # ۴. اعمال فیلتر تگ تجربی
+    # ۵. اعمال فیلتر تگ تجربی
     if active_tag:
         places_qs = places_qs.filter(
             place_tags__tag__name=active_tag,
             place_tags__is_active=True
         )
 
-    # ۵. اعمال فیلتر محدوده و منطقه شهری (تهران و کرج)
+    # ۶. اعمال فیلتر محدوده و منطقه شهری
     if selected_district:
         places_qs = places_qs.filter(district__iexact=selected_district)
 
-    # ۶. فیلتر اختصاصی کلکسیون‌های سناریومحور
+    # ۷. فیلتر کلکسیون‌های سناریومحور
     if selected_collection == 'work':
         places_qs = places_qs.filter(
             place_tags__tag__name__in=['مناسب مطالعه', 'خلوت', 'دنج'],
@@ -59,11 +77,11 @@ def home_page_view(request):
             place_tags__is_active=True
         )
 
-    # ۷. جستجوی متنی هیرو
+    # ۸. جستجوی متنی هیرو
     if search_query:
         places_qs = places_qs.filter(name__icontains=search_query)
 
-    # ۸. اعمال فیلتر و مرتب‌سازی تب‌های تعاملی ویترین
+    # ۹. اعمال فیلتر و مرتب‌سازی تب‌های تعاملی ویترین
     if active_tab == 'latest':
         places_qs = places_qs.order_by('-created_at')
     elif active_tab == 'cozy':
@@ -79,7 +97,7 @@ def home_page_view(request):
 
     places_qs = places_qs.distinct()
 
-    # ۹. استخراج مناطق پرپاتوق موجود در دیتابیس (تهران و کرج)
+    # ۱۰. استخراج مناطق پرپاتوق
     available_districts = (
         Place.objects.filter(is_active=True)
         .exclude(district__isnull=True)
@@ -89,15 +107,13 @@ def home_page_view(request):
         .order_by('-count')
     )
 
-    # ۱۰. کنترل تعداد کارت‌های خروجی جهت بهینه‌سازی سرعت و خلوتی UI
     has_filter = bool(
         selected_category or active_tag or search_query or
-        selected_district or selected_collection
+        selected_district or selected_collection or selected_price
     )
     total_count = places_qs.count()
     places_list = places_qs[:6] if not has_filter else places_qs[:12]
 
-    # ۱۱. واکشی دسته‌بندی‌های پرکاربرد و تگ‌های فعال
     popular_categories = Category.objects.filter(is_active=True).annotate(
         places_count=Count('places')
     ).order_by('-places_count', 'name')[:5]
@@ -118,6 +134,7 @@ def home_page_view(request):
         'selected_collection': selected_collection,
         'selected_district': selected_district,
         'available_districts': available_districts,
+        'selected_price': selected_price,  # <--- ارسال به کانتکست
     }
     return render(request, 'places/home.html', context)
 

@@ -8,42 +8,27 @@ from apps.tags.models import Tag
 
 
 def home_page_view(request):
-    """رندر سمت سرور صفحه اصلی همراه با فیلتر ترکیبی دسته‌بندی، تگ‌ها، سرچ متنی و تب‌های ویترین"""
+    """رندر سمت سرور صفحه اصلی همراه با فیلتر ترکیبی دسته‌بندی، تگ‌ها، سرچ متنی، کلکسیون‌ها و فیلتر مناطق"""
     selected_category = request.GET.get('category', '').strip()
     active_tag = request.GET.get('tag', '').strip()
     search_query = request.GET.get('q', '').strip()
     active_tab = request.GET.get('tab', 'popular').strip()
     selected_collection = request.GET.get('collection', '').strip()
+    selected_district = request.GET.get('district', '').strip()
 
+    # ۱. استخراج شیء دسته‌بندی برای نمایش نام فارسی در هدر و فیلترها
     selected_category_obj = None
     if selected_category:
         selected_category_obj = Category.objects.filter(slug=selected_category, is_active=True).first()
 
-    # ۱. کوئری پایه مکان‌های فعال
+    # ۲. کوئری پایه مکان‌های فعال
     places_qs = Place.objects.filter(is_active=True).prefetch_related(
         'categories',
         'place_tags__tag',
         'images'
     )
 
-    # ۲. فیلتر تب‌های تعاملی ویترین
-    if active_tab == 'latest':
-        # جدیدترین‌ها
-        places_qs = places_qs.order_by('-created_at')
-    elif active_tab == 'cozy':
-        # پاتوق‌های دنج و خلوت (دارای تگ فعال خلوت یا دنج)
-        places_qs = places_qs.filter(
-            place_tags__tag__name__in=['خلوت', 'دنج', 'خلوت و آرام'],
-            place_tags__is_active=True
-        ).order_by('-place_tags__strength', '-created_at')
-    else:
-        # محبوب‌ترین‌ها (بر اساس تعداد بازخوردهای تاییدشده)
-        active_tab = 'popular'
-        places_qs = places_qs.annotate(
-            approved_reviews_count=Count('reviews', filter=Q(reviews__status='APPROVED'))
-        ).order_by('-approved_reviews_count', '-created_at')
-
-    # ۳. اعمال فیلتر دسته‌بندی (در صورت انتخاب)
+    # ۳. اعمال فیلتر دسته‌بندی
     if selected_category:
         places_qs = places_qs.filter(categories__slug=selected_category)
 
@@ -54,43 +39,70 @@ def home_page_view(request):
             place_tags__is_active=True
         )
 
-    # ۵. جستجوی متنی
-    if search_query:
-        places_qs = places_qs.filter(name__icontains=search_query)
+    # ۵. اعمال فیلتر محدوده و منطقه شهری (تهران و کرج)
+    if selected_district:
+        places_qs = places_qs.filter(district__iexact=selected_district)
 
-    places_qs = places_qs.distinct()
-
-    has_filter = bool(selected_category or active_tag or search_query)
-    total_count = places_qs.count()
-
-    # نمایش ۶ مکان منتخب
-    places_list = places_qs[:6] if not has_filter else places_qs[:12]
-
-    # ۶. واکشی دسته‌بندی‌های پرکاربرد
-    popular_categories = Category.objects.filter(is_active=True).annotate(
-        places_count=Count('places')
-    ).order_by('-places_count', 'name')[:5]
-
-    quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
-
-    # فیلتر اختصاصی کلکسیون‌های سناریومحور
+    # ۶. فیلتر اختصاصی کلکسیون‌های سناریومحور
     if selected_collection == 'work':
-        # مناسب دورکاری و مطالعه با لپ‌تاپ
         places_qs = places_qs.filter(
             place_tags__tag__name__in=['مناسب مطالعه', 'خلوت', 'دنج'],
             place_tags__is_active=True
         )
     elif selected_collection == 'night':
-        # پاتوق‌های شبانه و باز تا دیرساعت (ساعت کاری شامل ۲۴:۰۰ یا ۲۴ ساعته)
         places_qs = places_qs.filter(
             working_hours__iregex=r'(24|۲۴|بامداد|شب)'
         )
     elif selected_collection == 'outdoor':
-        # فضاهای باز و حیاط‌دار
         places_qs = places_qs.filter(
             place_tags__tag__name__in=['فضای باز', 'حیاط'],
             place_tags__is_active=True
         )
+
+    # ۷. جستجوی متنی هیرو
+    if search_query:
+        places_qs = places_qs.filter(name__icontains=search_query)
+
+    # ۸. اعمال فیلتر و مرتب‌سازی تب‌های تعاملی ویترین
+    if active_tab == 'latest':
+        places_qs = places_qs.order_by('-created_at')
+    elif active_tab == 'cozy':
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['خلوت', 'دنج', 'خلوت و آرام'],
+            place_tags__is_active=True
+        ).order_by('-place_tags__strength', '-created_at')
+    else:
+        active_tab = 'popular'
+        places_qs = places_qs.annotate(
+            approved_reviews_count=Count('reviews', filter=Q(reviews__status='APPROVED'))
+        ).order_by('-approved_reviews_count', '-created_at')
+
+    places_qs = places_qs.distinct()
+
+    # ۹. استخراج مناطق پرپاتوق موجود در دیتابیس (تهران و کرج)
+    available_districts = (
+        Place.objects.filter(is_active=True)
+        .exclude(district__isnull=True)
+        .exclude(district__exact='')
+        .values('district')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    # ۱۰. کنترل تعداد کارت‌های خروجی جهت بهینه‌سازی سرعت و خلوتی UI
+    has_filter = bool(
+        selected_category or active_tag or search_query or
+        selected_district or selected_collection
+    )
+    total_count = places_qs.count()
+    places_list = places_qs[:6] if not has_filter else places_qs[:12]
+
+    # ۱۱. واکشی دسته‌بندی‌های پرکاربرد و تگ‌های فعال
+    popular_categories = Category.objects.filter(is_active=True).annotate(
+        places_count=Count('places')
+    ).order_by('-places_count', 'name')[:5]
+
+    quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
     context = {
         'places': places_list,
@@ -104,6 +116,8 @@ def home_page_view(request):
         'active_tag': active_tag,
         'search_query': search_query,
         'selected_collection': selected_collection,
+        'selected_district': selected_district,
+        'available_districts': available_districts,
     }
     return render(request, 'places/home.html', context)
 

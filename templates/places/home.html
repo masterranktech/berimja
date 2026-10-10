@@ -62,7 +62,7 @@
     </div>
 </section>
 
- <!-- نوار مدرن و متحرک آمار زنده و اعتبار پلتفرم (Interactive Social Proof) -->
+<!-- نوار مدرن و متحرک آمار زنده و اعتبار پلتفرم (Interactive Social Proof) -->
 <section class="social-proof-section" id="social-proof-section">
     <div class="social-proof-container">
 
@@ -124,8 +124,8 @@
         </div>
 
         <div class="categories-grid">
-            <!-- ۱. همه مکان‌ها (ریست دسته‌بندی با حفظ تگ انتخابی) -->
-            <a href="{% url 'places_web:home' %}{% if active_tag %}?tag={{ active_tag }}{% endif %}" class="category-item-card {% if not selected_category %}active{% endif %}">
+            <!-- ۱. همه مکان‌ها (ریست دسته‌بندی با حفظ سایر پارامترها) -->
+            <a href="{% url 'places_web:home' %}{% if active_tag %}?tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}" class="category-item-card {% if not selected_category %}active{% endif %}">
                 <div class="category-icon-box">
                     <i data-lucide="layout-grid"></i>
                 </div>
@@ -134,7 +134,7 @@
 
             <!-- ۲. دسته‌بندی‌های پرکاربرد از دیتابیس -->
             {% for cat in categories %}
-                <a href="{% url 'places_web:home' %}?category={{ cat.slug }}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+                <a href="{% url 'places_web:home' %}?category={{ cat.slug }}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
                    class="category-item-card {% if selected_category == cat.slug %}active{% endif %}">
                     <div class="category-icon-box">
                         {% if 'cafe' in cat.slug %}
@@ -177,8 +177,7 @@
     </div>
 </section>
 
-
-    <!-- بخش کلکسیون‌های سناریومحور (Mood Collections) -->
+<!-- بخش کلکسیون‌های سناریومحور (Mood Collections) -->
 <section class="collections-section">
     <div class="collections-container">
         <div class="collections-header">
@@ -246,7 +245,7 @@
     </div>
 </section>
 
-<!-- نوار فیلترهای حسی و تگ‌های سریع (ترکیب‌پذیر با دسته‌بندی) -->
+<!-- نوار فیلترهای حسی و تگ‌های سریع (ترکیب‌پذیر با دسته‌بندی و منطقه) -->
 <section class="vibe-filter-section" id="places-section">
     <div class="vibe-container">
 
@@ -257,12 +256,15 @@
             </span>
 
             <!-- وضعیت فیلتر فعال و دکمه ریست سریع -->
-            {% if selected_category or active_tag or search_query %}
+            {% if selected_category or active_tag or search_query or selected_district or selected_collection %}
                 <div class="active-filter-summary">
                     {% if selected_category_obj %}
                         <span class="pill-badge">دسته: {{ selected_category_obj.name }}</span>
                     {% elif selected_category %}
                         <span class="pill-badge">دسته: {{ selected_category }}</span>
+                    {% endif %}
+                    {% if selected_district %}
+                        <span class="pill-badge">محدوده: {{ selected_district }}</span>
                     {% endif %}
                     {% if active_tag %}
                         <span class="pill-badge">ویژگی: {{ active_tag }}</span>
@@ -281,7 +283,7 @@
         <!-- چیپ‌های اسلایدر تگ -->
         <div class="vibe-chips-slider">
             <!-- حالت «همه ویژگی‌ها» -->
-            <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+            <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
                class="vibe-chip {% if not active_tag %}active{% endif %}">
                 همه حال‌وهواها
             </a>
@@ -290,14 +292,14 @@
             {% for tag in quick_tags %}
                 {% if active_tag == tag.name %}
                     <!-- کلیک روی تگ فعال برای لغو انتخاب -->
-                    <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                    <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
                        class="vibe-chip active">
                         <span>{{ tag.name }}</span>
                         <i data-lucide="check"></i>
                     </a>
                 {% else %}
-                    <!-- کلیک روی تگ همراه با حفظ دسته‌بندی -->
-                    <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}"
+                    <!-- کلیک روی تگ همراه با حفظ دسته‌بندی و منطقه -->
+                    <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
                        class="vibe-chip">
                         <span>{{ tag.name }}</span>
                     </a>
@@ -308,25 +310,52 @@
     </div>
 </section>
 
-<!-- بخش نمایش لیست مکان‌ها همراه با تب‌های ویترین -->
+<!-- بخش نمایش لیست مکان‌ها همراه با فیلتر منطقه و تب‌های ویترین -->
 <section class="container" style="padding-bottom: 4rem;">
+
+  <!-- نوار فیلتر سریع مناطق شهری (تهران و کرج به صورت داینامیک از دیتابیس) -->
+  {% if available_districts %}
+  <div class="district-filter-bar">
+    <div class="district-filter-label">
+      <i data-lucide="map-pin"></i>
+      <span>محدوده شهری:</span>
+    </div>
+
+    <div class="district-chips-container">
+      <!-- گزینه همه مناطق -->
+      <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
+         class="district-chip {% if not selected_district %}active{% endif %}">
+        همه محدوده‌ها
+      </a>
+
+      <!-- مناطق واکشی‌شده از دیتابیس با حفظ سایر فیلترها -->
+      {% for dist in available_districts %}
+        <a href="{% url 'places_web:home' %}?district={{ dist.district }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
+           class="district-chip {% if selected_district == dist.district %}active{% endif %}">
+          <span>{{ dist.district }}</span>
+          <span class="district-count">({{ dist.count }})</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   <!-- نوار تب‌های تفکیکی ویترین (Featured Tabs) -->
   <div class="showcase-tabs-wrapper">
     <div class="showcase-tabs">
-      <a href="{% url 'places_web:home' %}?tab=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
          class="showcase-tab {% if active_tab == 'popular' %}active{% endif %}">
         <span class="tab-icon">🔥</span>
         <span>محبوب‌ترین‌ها</span>
       </a>
 
-      <a href="{% url 'places_web:home' %}?tab=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
          class="showcase-tab {% if active_tab == 'latest' %}active{% endif %}">
         <span class="tab-icon">✨</span>
         <span>جدیدترین‌ها</span>
       </a>
 
-      <a href="{% url 'places_web:home' %}?tab=cozy{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=cozy{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
          class="showcase-tab {% if active_tab == 'cozy' %}active{% endif %}">
         <span class="tab-icon">🤫</span>
         <span>پاتوق‌های دنج و خلوت</span>
@@ -334,12 +363,16 @@
     </div>
   </div>
 
-  <!-- هدر اطلاعاتی لیست -->
+  <!-- هدر اطلاعاتی لیست مکان‌ها -->
   <div class="places-section-header">
     <div>
       <h2 class="section-title">
-        {% if active_tab == 'cozy' %}
-          پاتوق‌های دنج و آرام تهران
+        {% if selected_district and active_tab == 'cozy' %}
+          پاتوق‌های دنج در محدوده {{ selected_district }}
+        {% elif selected_district %}
+          مکان‌های ثبت‌شده در {{ selected_district }}
+        {% elif active_tab == 'cozy' %}
+          پاتوق‌های دنج و آرام
         {% elif active_tab == 'latest' %}
           جدیدترین مکان‌های ثبت‌شده
         {% else %}
@@ -347,10 +380,12 @@
         {% endif %}
       </h2>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
-        {% if active_tab == 'cozy' %}
+        {% if selected_district %}
+          نمایش مکان‌های معتبر و فعال در این محدوده
+        {% elif active_tab == 'cozy' %}
           مکان‌هایی با بالاترین درصد آرامش و فضای خلوت به انتخاب کاربران
         {% elif active_tab == 'latest' %}
-          تازه‌ترین مکان‌های اضافه‌شده به بریم‌جا
+          تازه‌ترین مقاصد اضافه‌شده به بریم‌جا
         {% else %}
           مکان‌هایی که بیشترین میزان رضایت و بازخورد را داشته‌اند
         {% endif %}
@@ -369,7 +404,7 @@
     {% empty %}
       <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
         <i data-lucide="map-pin-off" style="width: 3rem; height: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-        <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی در این تب یافت نشد.</p>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی با مشخصات انتخابی یافت نشد.</p>
         <a href="{% url 'places_web:home' %}" class="btn-primary-outline" style="margin-top: 1rem;">مشاهده همه مکان‌ها</a>
       </div>
     {% endfor %}
@@ -378,14 +413,14 @@
   {% if total_count > places|length %}
     <div style="text-align: center; margin-top: 2.5rem;">
       <a href="/places" class="btn-load-more">
-        <span>مشاهده همه مکان‌های تهران ({{ total_count }})</span>
+        <span>مشاهده همه مکان‌ها ({{ total_count }})</span>
         <i data-lucide="arrow-left"></i>
       </a>
     </div>
   {% endif %}
 </section>
 
-    <!-- بنر مدرن دعوت به مشارکت و گسترش بریم‌جا (Community CTA) -->
+<!-- بنر مدرن دعوت به مشارکت و گسترش بریم‌جا (Community CTA) -->
 <section class="community-cta-section">
     <div class="community-cta-card">
         <!-- نورهای ملایم داخلی کادر -->
@@ -421,25 +456,25 @@
 
 {% block extra_js %}
 <script>
-// غیرفعال‌سازی اسکرول خودکار مرورگر
+// ۱. غیرفعال‌سازی اسکرول خودکار مرورگر
 if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 
-// بازیابی دقیق موقعیت عمودی صفحه
+// ۲. بازیابی دقیق موقعیت عمودی صفحه
 const savedScroll = sessionStorage.getItem('home_page_scroll');
 if (savedScroll !== null) {
     window.scrollTo(0, parseInt(savedScroll, 10));
     sessionStorage.removeItem('home_page_scroll');
 }
 
-// ثبت آخرین موقعیت قبل از رفرش یا جابه‌جایی
+// ۳. ثبت آخرین موقعیت قبل از رفرش یا جابه‌جایی
 window.addEventListener('beforeunload', () => {
     sessionStorage.setItem('home_page_scroll', window.scrollY.toString());
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // درگ برای اسکرول افقی چیپ‌ها
+    // درگ برای اسکرول افقی چیپ‌های تگ
     const slider = document.querySelector('.vibe-chips-slider');
     if (slider) {
         let isDown = false;
@@ -473,51 +508,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // انیمیشن شمارش اعداد (Count-up Animation)
-const counters = document.querySelectorAll('.stat-counter');
-let hasAnimated = false;
+    const counters = document.querySelectorAll('.stat-counter');
+    let hasAnimated = false;
 
-const runCounterAnimation = () => {
-    counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'), 10);
-        const duration = 1600; // مدت انیمیشن بر حسب میلی‌ثانیه
-        const frameRate = 1000 / 60;
-        const totalFrames = Math.round(duration / frameRate);
-        let frame = 0;
+    const runCounterAnimation = () => {
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'), 10);
+            const duration = 1600;
+            const frameRate = 1000 / 60;
+            const totalFrames = Math.round(duration / frameRate);
+            let frame = 0;
 
-        const countTimer = setInterval(() => {
-            frame++;
-            // تابع حرکت Ease-Out برای فرود نرم اعداد
-            const progress = frame / totalFrames;
-            const current = Math.round(target * (1 - Math.pow(1 - progress, 3)));
+            const countTimer = setInterval(() => {
+                frame++;
+                const progress = frame / totalFrames;
+                const current = Math.round(target * (1 - Math.pow(1 - progress, 3)));
 
-            counter.innerText = current.toLocaleString('fa-IR');
+                counter.innerText = current.toLocaleString('fa-IR');
 
-            if (frame >= totalFrames) {
-                counter.innerText = target.toLocaleString('fa-IR');
-                clearInterval(countTimer);
-            }
-        }, frameRate);
-    });
-};
-
-// اجرای انیمیشن به محض نمایان شدن در دید کاربر (Intersection Observer)
-const proofSection = document.getElementById('social-proof-section');
-if (proofSection && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !hasAnimated) {
-                hasAnimated = true;
-                runCounterAnimation();
-                observer.unobserve(entry.target);
-            }
+                if (frame >= totalFrames) {
+                    counter.innerText = target.toLocaleString('fa-IR');
+                    clearInterval(countTimer);
+                }
+            }, frameRate);
         });
-    }, { threshold: 0.3 });
+    };
 
-    observer.observe(proofSection);
-} else {
-    // اجرای مستقیم در صورت عدم پشتیبانی مرورگر
-    runCounterAnimation();
-}
+    const proofSection = document.getElementById('social-proof-section');
+    if (proofSection && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasAnimated) {
+                    hasAnimated = true;
+                    runCounterAnimation();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(proofSection);
+    } else {
+        runCounterAnimation();
+    }
 
     // فعال‌سازی سراسری آیکون‌های Lucide
     if (window.lucide) {

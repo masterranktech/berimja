@@ -256,6 +256,99 @@
 }
 
 /* ==========================================================================
+   نوار فیلتر سریع مناطق شهری (District Quick Filter)
+   ========================================================================== */
+
+.district-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1120px;
+  margin: 0 auto 1.5rem auto;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+}
+
+.district-filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  padding-right: 4px;
+}
+
+.district-filter-label i {
+  width: 15px;
+  height: 15px;
+  color: var(--color-primary);
+}
+
+.district-chips-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.district-chips-container::-webkit-scrollbar {
+  display: none;
+}
+
+.district-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 1px solid var(--border-base);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.district-chip:hover {
+  border-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.district-chip.active {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.15);
+}
+
+.district-count {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .district-filter-bar {
+    border-radius: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+}
+
+/* ==========================================================================
    نوار آمار زنده و اعتبار پلتفرم (Enhanced Social Proof Cards)
    ========================================================================== */
 

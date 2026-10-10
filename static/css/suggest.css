@@ -1,0 +1,169 @@
+/* ==========================================================================
+   استایل اختصاصی صفحه معرفی و پیشنهاد مکان جدید (Suggest Place Page)
+   ========================================================================== */
+
+.suggest-page-wrapper {
+  max-width: 680px;
+  margin: 2.5rem auto 4.5rem auto;
+  padding: 0 1.25rem;
+}
+
+.suggest-breadcrumb {
+  padding-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.suggest-breadcrumb a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.suggest-breadcrumb a:hover {
+  color: var(--color-primary);
+}
+
+.suggest-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 26px;
+  padding: 2.5rem 2.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.05);
+  box-sizing: border-box;
+}
+
+.suggest-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.suggest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.825rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.suggest-badge i,
+.suggest-badge svg {
+  width: 15px;
+  height: 15px;
+}
+
+.suggest-title {
+  font-size: 1.6rem;
+  font-weight: 850;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.4px;
+}
+
+.suggest-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* گرید دو ستونه برای منطقه و دسته‌بندی */
+.suggest-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* دکمه‌های اقدام انتهای فرم */
+.suggest-actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.btn-suggest-submit {
+  flex: 2;
+  padding: 0.85rem 1.25rem;
+  background-color: var(--color-primary, #e11d48);
+  color: #ffffff !important;
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.25);
+  text-decoration: none;
+}
+
+.btn-suggest-submit:hover {
+  background-color: var(--color-primary-hover, #be123c);
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-suggest-submit:active {
+  transform: scale(0.98);
+}
+
+.btn-suggest-cancel {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  background-color: #ffffff;
+  color: var(--text-secondary, #64748b) !important;
+  border: 1.5px solid var(--border-base, #cbd5e1);
+  border-radius: var(--radius-md, 0.5rem);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-suggest-cancel:hover {
+  background-color: var(--bg-muted, #f1f5f9);
+  color: var(--text-primary, #0f172a) !important;
+  border-color: var(--text-muted, #94a3b8);
+}
+
+/* واکنش‌گرایی در نمایشگرهای موبایل */
+@media (max-width: 620px) {
+  .suggest-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .suggest-title {
+    font-size: 1.35rem;
+  }
+
+  .suggest-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .suggest-actions-row {
+    flex-direction: column;
+  }
+
+  .btn-suggest-submit,
+  .btn-suggest-cancel {
+    width: 100%;
+    flex: none;
+  }
+}

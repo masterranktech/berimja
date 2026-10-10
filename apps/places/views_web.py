@@ -5,6 +5,9 @@ from apps.places.models import Category, Place
 from apps.questions.models import Section
 from apps.reviews.models import Review, ReviewStatus
 from apps.tags.models import Tag
+from django.http import JsonResponse
+import json
+from apps.reviews.models import Report, ReportType, ReportStatus
 
 
 def home_page_view(request):
@@ -247,3 +250,54 @@ def random_place_view(request):
     messages.info(request, 'در حال حاضر مقصدی برای پیشنهاد تصادفی یافت نشد.')
     return redirect('places_web:home')
 
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from apps.places.models import Category, Place
+from apps.reviews.models import Report, ReportType, ReportStatus
+
+
+def suggest_place_page_view(request):
+    """صفحه اختصاصی و مستقل معرفی و پیشنهاد مکان جدید توسط کاربر"""
+    # بررسی لاگین بودن کاربر
+    if not request.user.is_authenticated:
+        messages.info(request, 'برای معرفی مکان جدید، لطفاً ابتدا وارد حساب کاربری خود شوید.')
+        return redirect(f"/accounts/login/?next={request.path}")
+
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        district = request.POST.get('district', '').strip()
+        category = request.POST.get('category', '').strip()
+        address = request.POST.get('address', '').strip()
+        notes = request.POST.get('notes', '').strip()
+
+        if not name or not district or not address:
+            messages.error(request, 'لطفاً نام، منطقه و نشانی مکان را به طور کامل وارد کنید.')
+            return render(request, 'places/suggest_place.html', {
+                'categories': Category.objects.filter(is_active=True),
+                'form_data': request.POST
+            })
+
+        # ارجاع به اولین مکان فعال سیستم جهت ثبت گزارش پیشنهاد
+        fallback_place = Place.objects.filter(is_active=True).first()
+        if not fallback_place:
+            messages.error(request, 'خطایی در ارتباط با دیتابیس رخ داد.')
+            return render(request, 'places/suggest_place.html')
+
+        reason_text = f"پیشنهاد مکان جدید: {name} ({district})"
+        description_text = f"نام مکان: {name}\nدسته‌بندی: {category}\nمنطقه: {district}\nنشانی: {address}\nتوضیحات و ویژگی‌ها: {notes}"
+
+        Report.objects.create(
+            user=request.user,
+            place=fallback_place,
+            report_type=ReportType.SUGGESTION,
+            reason=reason_text[:200],
+            description=description_text,
+            status=ReportStatus.PENDING
+        )
+
+        messages.success(request, 'پیشنهاد شما با موفقیت ثبت شد و پس از بررسی تیم بریم‌جا به لیست پاتوق‌ها اضافه خواهد شد.')
+        return redirect('places_web:home')
+
+    categories = Category.objects.filter(is_active=True)
+    return render(request, 'places/suggest_place.html', {'categories': categories})

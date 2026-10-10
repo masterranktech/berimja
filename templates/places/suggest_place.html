@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}معرفی مکان و پاتوق جدید | بریم‌جا{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/suggest.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="suggest-page-wrapper">
+  <!-- مسیر ناوبری -->
+  <div class="suggest-breadcrumb">
+    <a href="{% url 'places_web:home' %}">صفحه نخست</a>
+    <span> / </span>
+    <span>معرفی مکان جدید</span>
+  </div>
+
+  <div class="suggest-card">
+    <div class="suggest-header">
+      <div class="suggest-badge">
+        <i data-lucide="map-pin-plus"></i>
+        <span>مشارکت جامعه بریم‌جا</span>
+      </div>
+      <h1 class="suggest-title">پاتوق موردعلاقه‌ات رو معرفی کن</h1>
+      <p class="suggest-subtitle">
+        اگه کافه، رستوران یا گوشه دنجی در تهران یا کرج می‌شناسی که جاش توی بریم‌جا خالیه، مشخصاتش رو بنویس تا بررسی و اضافه بشه.
+      </p>
+    </div>
+
+    <!-- پیام‌های ارسالی سیستم -->
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="{% if msg.tags == 'success' %}auth-success-msg{% else %}auth-error-msg{% endif %}">
+          {{ msg }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'places_web:suggest_place_page' %}">
+      {% csrf_token %}
+
+      <div class="auth-input-group">
+        <label for="name">نام مکان / پاتوق: <span style="color: var(--color-primary);">*</span></label>
+        <input type="text" name="name" id="name" value="{{ form_data.name|default:'' }}" placeholder="مثال: کافه حیاط شماره ۶۵" maxlength="150" required autofocus>
+      </div>
+
+      <div class="suggest-form-grid">
+        <div class="auth-input-group">
+          <label for="district">منطقه / محله: <span style="color: var(--color-primary);">*</span></label>
+          <input type="text" name="district" id="district" value="{{ form_data.district|default:'' }}" placeholder="مثال: منطقه ۶، عظیمیه..." maxlength="100" required>
+        </div>
+
+        <div class="auth-input-group">
+          <label for="category">دسته‌بندی پیشنهادی:</label>
+          <select name="category" id="category" class="report-select">
+            {% for cat in categories %}
+              <option value="{{ cat.name }}">{{ cat.name }}</option>
+            {% empty %}
+              <option value="کافه">کافه</option>
+              <option value="رستوران">رستوران</option>
+              <option value="فضای باز و طبیعت">فضای باز و طبیعت</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="auth-input-group">
+        <label for="address">آدرس یا نشانی حدودی: <span style="color: var(--color-primary);">*</span></label>
+        <input type="text" name="address" id="address" value="{{ form_data.address|default:'' }}" placeholder="خیابان، تقاطع یا پلاک..." maxlength="300" required>
+      </div>
+
+      <div class="auth-input-group">
+        <label for="notes">ویژگی خاص یا حس‌وحال فضا (اختیاری):</label>
+        <textarea name="notes" id="notes" class="comment-textarea" placeholder="چرا اینجا پاتوق خوبیه؟ دنج بودنش، مناسب مطالعه با لپ‌تاپ، قهوه باکیفیت یا..."></textarea>
+      </div>
+
+      <div class="suggest-actions-row">
+        <button type="submit" class="btn-suggest-submit">
+          <i data-lucide="send" style="width: 17px; height: 17px;"></i>
+          <span>ارسال پیشنهاد به بریم‌جا</span>
+        </button>
+        <a href="{% url 'places_web:home' %}" class="btn-suggest-cancel">
+          انصراف
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+</script>
+{% endblock %}

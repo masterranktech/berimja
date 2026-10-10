@@ -484,17 +484,18 @@
                 بریم‌جا با تجربه‌های واقعی آدم‌های شهر کامل می‌شه. اگه کافه، رستوران یا گوشه دنجی رو می‌شناسی که جاش اینجاست، به ما معرفیش کن یا با ثبت تجربه‌هات به انتخاب بقیه کمک کن.
             </p>
 
-            <div class="community-cta-actions">
-                <button type="button" class="btn-cta-primary" id="btn-open-suggest-modal">
-                    <i data-lucide="plus-circle"></i>
-                    <span>معرفی و ثبت مکان جدید</span>
-                </button>
+            <!-- در بخش community-cta-section جایگزین دکمه قبلی شود: -->
+<div class="community-cta-actions">
+    <a href="{% url 'places_web:suggest_place_page' %}" class="btn-cta-primary">
+        <i data-lucide="plus-circle"></i>
+        <span>معرفی و ثبت مکان جدید</span>
+    </a>
 
-                <a href="#places-section" class="btn-cta-secondary">
-                    <i data-lucide="message-square-plus"></i>
-                    <span>ثبت نظر برای مکان‌های موجود</span>
-                </a>
-            </div>
+    <a href="#places-section" class="btn-cta-secondary">
+        <i data-lucide="message-square-plus"></i>
+        <span>ثبت نظر برای مکان‌های موجود</span>
+    </a>
+</div>
         </div>
     </div>
 </section>
@@ -634,6 +635,7 @@
     </div>
 </section>
 {% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
@@ -814,6 +816,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         revealElements.forEach(el => el.classList.add('revealed'));
     }
+
+    // کنترل تعاملی مودال پیشنهاد مکان جدید (Suggest Place Modal)
+    const btnOpenSuggest = document.getElementById('btn-open-suggest-modal');
+    const suggestModal = document.getElementById('suggest-place-modal');
+    const btnCloseSuggest = document.getElementById('btn-close-suggest-modal');
+    const suggestForm = document.getElementById('suggest-place-form');
+    const suggestAlert = document.getElementById('suggest-alert');
+    const btnSubmitSuggest = document.getElementById('btn-submit-suggest');
 
     // فعال‌سازی سراسری آیکون‌های Lucide
     if (window.lucide) {

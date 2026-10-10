@@ -58,14 +58,32 @@
     </div>
   </div>
 
-  <!-- فوتر کارت -->
+  <!-- فوتر کارت (ساعت کاری، آمار بازخورد و لینک جزئیات) -->
   <div class="card-footer">
-    <div class="card-hours">
-      <i data-lucide="clock"></i>
-      <span>{{ place.working_hours|default:"ساعات کاری نامشخص" }}</span>
+    <div class="card-meta-group">
+      <!-- ساعت کاری -->
+      <div class="card-hours" title="ساعات کاری">
+        <i data-lucide="clock"></i>
+        <span>{{ place.working_hours|default:"نامشخص" }}</span>
+      </div>
+
+      <!-- بج تعداد نظرات و تجربیات ثبت‌شده -->
+      <div class="card-reviews-count" title="تعداد تجربیات ثبت‌شده کاربران">
+        <i data-lucide="message-square"></i>
+        <span>
+          {% if place.total_reviews_count is not None %}
+            {{ place.total_reviews_count }}
+          {% else %}
+            {{ place.reviews.count }}
+          {% endif %}
+          تجربه
+        </span>
+      </div>
     </div>
+
+    <!-- دکمه مشاهده و جزئیات -->
     <a href="{% url 'places_web:place_detail' place.id %}" class="card-action-link">
-      <span>جزئیات و نظرات</span>
+      <span>جزئیات</span>
       <i data-lucide="chevron-left"></i>
     </a>
   </div>

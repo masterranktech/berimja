@@ -27,6 +27,8 @@ def home_page_view(request):
         'categories',
         'place_tags__tag',
         'images'
+    ).annotate(
+        total_reviews_count=Count('reviews', filter=Q(reviews__status='APPROVED'))
     )
 
     # ۳. اعمال فیلتر سطح قیمت بر اساس تگ‌های معنایی مدل

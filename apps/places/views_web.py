@@ -122,6 +122,17 @@ def home_page_view(request):
 
     quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
+    recent_reviews = (
+        Review.objects.filter(
+            status=ReviewStatus.APPROVED,
+            place__is_active=True
+        )
+        .exclude(comment__isnull=True)
+        .exclude(comment__exact='')
+        .select_related('user', 'place')
+        .order_by('-created_at')[:6]
+    )
+
     context = {
         'places': places_list,
         'total_count': total_count,
@@ -136,7 +147,8 @@ def home_page_view(request):
         'selected_collection': selected_collection,
         'selected_district': selected_district,
         'available_districts': available_districts,
-        'selected_price': selected_price,  # <--- ارسال به کانتکست
+        'selected_price': selected_price,
+        'recent_reviews': recent_reviews,
     }
     return render(request, 'places/home.html', context)
 

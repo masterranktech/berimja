@@ -578,6 +578,62 @@
 
     </div>
 </section>
+
+    <!-- نوار متحرک آخرین تجربیات زنده کاربران (Recent Live Vibe Feed) -->
+{% if recent_reviews %}
+<section class="live-feed-section">
+    <div class="live-feed-header">
+        <div class="live-indicator">
+            <span class="live-dot"></span>
+            <span class="live-label">نبض زنده شهر</span>
+        </div>
+        <h3 class="live-feed-title">تازه‌ترین تجربه‌های ثبت‌شده</h3>
+        <p class="live-feed-subtitle">دیدگاه‌های بی‌واسطه و بدون سانسور کاربران بریم‌جا</p>
+    </div>
+
+    <div class="marquee-wrapper">
+        <div class="marquee-track">
+            <!-- دسته اول کارت‌ها -->
+            {% for rev in recent_reviews %}
+                <div class="vibe-feed-card">
+                    <div class="vibe-card-top">
+                        <div class="vibe-user-info">
+                            <div class="vibe-avatar">
+                                <i data-lucide="user"></i>
+                            </div>
+                            <span class="vibe-user-name">{{ rev.user.public_name|default:"کاربر بریم‌جا" }}</span>
+                        </div>
+                        <a href="{% url 'places_web:place_detail' rev.place.id %}" class="vibe-place-tag">
+                            <i data-lucide="map-pin"></i>
+                            <span>{{ rev.place.name }}</span>
+                        </a>
+                    </div>
+                    <p class="vibe-card-comment">«{{ rev.comment|truncatechars:120 }}»</p>
+                </div>
+            {% endfor %}
+
+            <!-- تکرار دسته کارت‌ها برای ایجاد حلقه بی‌نهایت و بدون وقفه (Infinite Loop) -->
+            {% for rev in recent_reviews %}
+                <div class="vibe-feed-card" aria-hidden="true">
+                    <div class="vibe-card-top">
+                        <div class="vibe-user-info">
+                            <div class="vibe-avatar">
+                                <i data-lucide="user"></i>
+                            </div>
+                            <span class="vibe-user-name">{{ rev.user.public_name|default:"کاربر بریم‌جا" }}</span>
+                        </div>
+                        <a href="{% url 'places_web:place_detail' rev.place.id %}" class="vibe-place-tag">
+                            <i data-lucide="map-pin"></i>
+                            <span>{{ rev.place.name }}</span>
+                        </a>
+                    </div>
+                    <p class="vibe-card-comment">«{{ rev.comment|truncatechars:120 }}»</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

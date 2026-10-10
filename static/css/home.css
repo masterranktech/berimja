@@ -1885,3 +1885,287 @@
         padding-top: 12px;
     }
 }
+
+/* ==========================================================================
+   نوار متحرک تجربیات زنده با دیزاین شیشه‌ای کریستالی و گرادیانت متحرک
+   ========================================================================== */
+
+.live-feed-section {
+    position: relative;
+    max-width: 100%;
+    margin: 50px auto 70px auto;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* هدر مینیمال و شیک */
+.live-feed-header {
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto 30px auto;
+    padding: 0 20px;
+}
+
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(225, 29, 72, 0.25);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08);
+}
+
+.live-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+}
+
+.live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background-color: rgba(225, 29, 72, 0.6);
+    animation: live-pulse-ring 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes live-pulse-ring {
+    0% { transform: scale(0.8); opacity: 1; }
+    70% { transform: scale(2.6); opacity: 0; }
+    100% { transform: scale(2.6); opacity: 0; }
+}
+
+.live-feed-title {
+    font-size: 1.65rem;
+    font-weight: 850;
+    color: var(--text-primary);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+}
+
+.live-feed-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* کانتینر افقی با فید نرم در دو طرف */
+.marquee-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 24px 0;
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.marquee-track {
+    display: flex;
+    gap: 22px;
+    width: max-content;
+    animation: scroll-marquee 42s linear infinite;
+    will-change: transform;
+}
+
+.marquee-wrapper:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+/* ==========================================================================
+   کارت شیشه‌ای با افکت مه ارگانیک و فید کاملاً مات (Soft Liquid Aurora)
+   ========================================================================== */
+
+.vibe-feed-card {
+    position: relative;
+    width: 340px;
+    flex-shrink: 0;
+    padding: 22px 24px;
+    border-radius: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+    isolation: isolate; /* ایجاد لایه مجزا برای مات ماندن محتوا */
+
+    /* بدنه شیشه‌ای با غلظت بلور بالا و بافت ساتنی */
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+    box-shadow:
+        0 14px 35px rgba(15, 23, 42, 0.03),
+        0 2px 6px rgba(15, 23, 42, 0.02),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+    transition:
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.25s ease;
+}
+
+/* لایه مه رنگی و کاملاً فید در عمق شیشه (بدون زاویه و بدون حس مستطیل) */
+.vibe-feed-card::before {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    z-index: -1;
+
+    /* ۳ لکه نوری کاملاً گرد با ترکیب رنگ ملایم برند و مرزهای محوشده */
+    background:
+        radial-gradient(circle at 25% 30%, rgba(225, 29, 72, 0.14) 0%, transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(251, 146, 60, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(244, 63, 94, 0.10) 0%, transparent 60%);
+
+    /* بلور بسیار عمیق برای آب‌کردن کامل لبه‌ها و تبدیل به یک مه سیال */
+    filter: blur(36px);
+    -webkit-filter: blur(36px);
+
+    /* حرکت نرم جابه‌جایی و مقیاس توده‌های نوری (حذف کامل انیمیشن چرخش زاویه‌ای) */
+    animation: aurora-liquid-pulse 16s ease-in-out infinite alternate;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+/* انیمیشن تنفس و جابه‌جایی ملایم امواج رنگی (حالت ابری/مایع) */
+@keyframes aurora-liquid-pulse {
+    0% {
+        transform: translate(0%, 0%) scale(1);
+    }
+    33% {
+        transform: translate(4%, -5%) scale(1.08);
+    }
+    66% {
+        transform: translate(-5%, 4%) scale(0.96);
+    }
+    100% {
+        transform: translate(2%, -3%) scale(1.04);
+    }
+}
+
+/* خط باریک نور شیشه‌ای در لبه بالا */
+.vibe-feed-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+    pointer-events: none;
+}
+
+/* هاور روان و شناور شدن ملایم */
+.vibe-feed-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(225, 29, 72, 0.3);
+    box-shadow:
+        0 18px 40px rgba(225, 29, 72, 0.1),
+        0 4px 10px rgba(15, 23, 42, 0.03),
+        inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.vibe-card-top,
+.vibe-card-comment {
+    position: relative;
+    z-index: 1;
+}
+
+.vibe-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.vibe-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vibe-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 228, 230, 0.9), rgba(255, 241, 242, 0.7));
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(225, 29, 72, 0.1);
+}
+
+.vibe-avatar i {
+    width: 14px;
+    height: 14px;
+}
+
+.vibe-user-name {
+    font-size: 0.825rem;
+    font-weight: 750;
+    color: var(--text-primary);
+}
+
+.vibe-place-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    transition: all 0.2s ease;
+    max-width: 145px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vibe-place-tag:hover {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+    transform: translateY(-1px);
+}
+
+.vibe-place-tag i {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+.vibe-card-comment {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #334155;
+    line-height: 1.8;
+    margin: 0;
+}

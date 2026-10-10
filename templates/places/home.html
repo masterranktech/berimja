@@ -47,6 +47,17 @@
                     جستجو
                 </button>
             </form>
+
+            <div class="hero-shuffle-wrapper">
+                <a href="{% url 'places_web:random_place' %}" class="btn-lucky-shuffle" id="btn-lucky-shuffle">
+                    <span class="shuffle-dice-icon">
+                        <i data-lucide="dices"></i>
+                    </span>
+                    <span class="shuffle-text">نمی‌دونی کجا بری؟</span>
+                    <span class="shuffle-badge">بسپارش به شانس!</span>
+                    <i data-lucide="sparkles" class="shuffle-sparkle"></i>
+                </a>
+            </div>
         </div>
     </div>
 </section>

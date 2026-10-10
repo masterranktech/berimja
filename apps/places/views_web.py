@@ -161,3 +161,23 @@ def place_questionnaire_page_view(request, id):
     }
     return render(request, 'places/questionnaire.html', context)
 
+
+def random_place_view(request):
+    """انتخاب یک مکان تصادفی با اولویت مکان‌های دارای بازخورد و تگ فعال و هدایت کاربر به آن"""
+    # ۱. اولویت با مکان‌های فعال و باکیفیتی که تگ فعال دارند
+    random_place = Place.objects.filter(
+        is_active=True,
+        place_tags__is_active=True
+    ).distinct().order_by('?').first()
+
+    # ۲. در صورت خالی بودن شرط اول، فال‌بک به تمام مکان‌های فعال
+    if not random_place:
+        random_place = Place.objects.filter(is_active=True).order_by('?').first()
+
+    # ۳. اگر مکانی وجود داشت ریدایرکت کن، در غیر این صورت به صفحه اصلی برگردان
+    if random_place:
+        return redirect('places_web:place_detail', id=random_place.id)
+
+    messages.info(request, 'در حال حاضر مقصدی برای پیشنهاد تصادفی یافت نشد.')
+    return redirect('places_web:home')
+

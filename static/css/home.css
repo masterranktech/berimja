@@ -164,39 +164,95 @@
 }
 
 /* ==========================================================================
-   Mobile Responsive
+   دکمه جادویی پیشنهاد تصادفی (Lucky Shuffle Component)
    ========================================================================== */
 
-@media (max-width: 640px) {
-    .hero-section {
-        min-height: auto;
-    }
+.hero-shuffle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+    margin-bottom: 6px;
+}
 
-    .hero-container {
-        padding: 50px 16px 45px;
-    }
+.btn-lucky-shuffle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px 7px 14px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 241, 242, 0.85)
+    );
+    border: 1px solid rgba(225, 29, 72, 0.25);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    box-shadow:
+        0 6px 20px rgba(225, 29, 72, 0.08),
+        0 2px 6px rgba(15, 23, 42, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    .hero-title {
-        letter-spacing: -1px;
-    }
+.btn-lucky-shuffle:hover {
+    transform: translateY(-2px) scale(1.02);
+    border-color: var(--color-primary);
+    box-shadow:
+        0 10px 25px rgba(225, 29, 72, 0.16),
+        0 4px 10px rgba(15, 23, 42, 0.04);
+}
 
-    .hero-search {
-        border-radius: 16px;
-        padding: 4px;
-        min-height: 56px;
-    }
+/* آیکون تاس گردان */
+.shuffle-dice-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--color-primary), #f43f5e);
+    color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-    .hero-search-icon {
-        width: 38px;
-        height: 38px;
-    }
+.shuffle-dice-icon i {
+    width: 15px;
+    height: 15px;
+}
 
-    .hero-search button {
-        height: 44px;
-        padding: 0 16px;
-        border-radius: 12px;
-        font-size: 0.825rem;
-    }
+.btn-lucky-shuffle:hover .shuffle-dice-icon {
+    transform: rotate(180deg) scale(1.1);
+}
+
+/* متون دکمه */
+.shuffle-text {
+    font-size: 0.825rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.shuffle-badge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    background-color: rgba(225, 29, 72, 0.08);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.shuffle-sparkle {
+    width: 14px;
+    height: 14px;
+    color: #f59e0b; /* طلایی ملایم برای حس جادویی */
+    animation: sparkle-pulse 2s infinite ease-in-out;
+}
+
+@keyframes sparkle-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
 }
 
 /* ==========================================================================

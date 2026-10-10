@@ -2169,3 +2169,148 @@
     line-height: 1.8;
     margin: 0;
 }
+
+/* ==========================================================================
+   ۱. انیمیشن اسکلتون شیمر (Skeleton Loading Shimmer)
+   ========================================================================== */
+
+.skeleton-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+/* افکت نور متحرک و براق شیمر روی المان‌های خاکستری */
+.skeleton-box {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e8f0;
+  border-radius: 8px;
+}
+
+.skeleton-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer-wave 1.4s infinite;
+}
+
+@keyframes shimmer-wave {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-media {
+  width: 100%;
+  height: 205px;
+  border-radius: 0;
+}
+
+.skeleton-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 20px;
+  border-radius: 6px;
+}
+
+.skeleton-address {
+  width: 90%;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-tags-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.skeleton-tag {
+  width: 70px;
+  height: 24px;
+  border-radius: var(--radius-full);
+}
+
+.skeleton-footer {
+  padding: 12px 1.25rem;
+  border-top: 1px solid rgba(241, 245, 249, 0.9);
+  display: flex;
+  justify-content: space-between;
+}
+
+.skeleton-hours {
+  width: 80px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-btn {
+  width: 65px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   ۲. انیمیشن آبشاری فید از بالا به پایین برای کارت‌های جدید
+   ========================================================================== */
+
+.places-grid .place-card {
+  animation: fadeDownCard 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* تاخیر آبشاری بر اساس موقعیت کارت */
+.places-grid .place-card:nth-child(1) { animation-delay: 0.04s; }
+.places-grid .place-card:nth-child(2) { animation-delay: 0.08s; }
+.places-grid .place-card:nth-child(3) { animation-delay: 0.12s; }
+.places-grid .place-card:nth-child(4) { animation-delay: 0.16s; }
+.places-grid .place-card:nth-child(5) { animation-delay: 0.20s; }
+.places-grid .place-card:nth-child(6) { animation-delay: 0.24s; }
+
+@keyframes fadeDownCard {
+  0% {
+    opacity: 0;
+    transform: translateY(-22px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   ۳. انیمیشن‌های نرم ورود هنگام اسکرول (Scroll Reveal)
+   ========================================================================== */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -63,7 +63,7 @@
 </section>
 
 <!-- نوار مدرن و متحرک آمار زنده و اعتبار پلتفرم (Interactive Social Proof) -->
-<section class="social-proof-section" id="social-proof-section">
+<section class="social-proof-section reveal-on-scroll" id="social-proof-section">
     <div class="social-proof-container">
 
         <!-- کارت ۱: نظرات اعتبارسنجی‌شده با شمارنده پویا -->
@@ -116,7 +116,7 @@
 </section>
 
 <!-- نوار دسته‌بندی‌های منتخب (Top Categories) -->
-<section class="categories-section" id="categories-section">
+<section class="categories-section reveal-on-scroll" id="categories-section">
     <div class="categories-container">
         <div class="categories-header">
             <h2 class="categories-title">دسته‌بندی‌های منتخب</h2>
@@ -125,7 +125,8 @@
 
         <div class="categories-grid">
             <!-- ۱. همه مکان‌ها (ریست دسته‌بندی با حفظ سایر پارامترها) -->
-            <a href="{% url 'places_web:home' %}{% if active_tag %}?tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}" class="category-item-card {% if not selected_category %}active{% endif %}">
+            <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
+               class="category-item-card {% if not selected_category %}active{% endif %}">
                 <div class="category-icon-box">
                     <i data-lucide="layout-grid"></i>
                 </div>
@@ -134,7 +135,7 @@
 
             <!-- ۲. دسته‌بندی‌های پرکاربرد از دیتابیس -->
             {% for cat in categories %}
-                <a href="{% url 'places_web:home' %}?category={{ cat.slug }}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
+                <a href="{% url 'places_web:home' %}?category={{ cat.slug }}&tab={{ active_tab|default:'popular' }}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
                    class="category-item-card {% if selected_category == cat.slug %}active{% endif %}">
                     <div class="category-icon-box">
                         {% if 'cafe' in cat.slug %}
@@ -156,11 +157,11 @@
                     <span class="category-name">{{ cat.name }}</span>
                 </a>
             {% empty %}
-                <a href="{% url 'places_web:home' %}?category=cafe" class="category-item-card {% if selected_category == 'cafe' %}active{% endif %}">
+                <a href="{% url 'places_web:home' %}?category=cafe#places-section" class="category-item-card {% if selected_category == 'cafe' %}active{% endif %}">
                     <div class="category-icon-box"><i data-lucide="coffee"></i></div>
                     <span class="category-name">کافه</span>
                 </a>
-                <a href="{% url 'places_web:home' %}?category=restaurant" class="category-item-card {% if selected_category == 'restaurant' %}active{% endif %}">
+                <a href="{% url 'places_web:home' %}?category=restaurant#places-section" class="category-item-card {% if selected_category == 'restaurant' %}active{% endif %}">
                     <div class="category-icon-box"><i data-lucide="utensils"></i></div>
                     <span class="category-name">رستوران</span>
                 </a>
@@ -178,7 +179,7 @@
 </section>
 
 <!-- بخش کلکسیون‌های سناریومحور (Mood Collections) -->
-<section class="collections-section">
+<section class="collections-section reveal-on-scroll">
     <div class="collections-container">
         <div class="collections-header">
             <div>
@@ -186,7 +187,7 @@
                 <p class="collections-subtitle">سناریوی مد نظرت رو با یک کلیک پیدا کن</p>
             </div>
             {% if selected_collection %}
-                <a href="{% url 'places_web:home' %}" class="collections-reset-link">
+                <a href="{% url 'places_web:home' %}#places-section" class="collections-reset-link">
                     <i data-lucide="rotate-ccw"></i>
                     <span>نمایش همه کلکسیون‌ها</span>
                 </a>
@@ -195,7 +196,7 @@
 
         <div class="collections-grid">
             <!-- ۱. مناسب دورکاری و مطالعه -->
-            <a href="{% url 'places_web:home' %}?collection=work"
+            <a href="{% url 'places_web:home' %}?collection=work#places-section"
                class="collection-card collection-work {% if selected_collection == 'work' %}active{% endif %}">
                 <div class="collection-content">
                     <div class="collection-badge">
@@ -211,7 +212,7 @@
             </a>
 
             <!-- ۲. پاتوق‌های شبانه -->
-            <a href="{% url 'places_web:home' %}?collection=night"
+            <a href="{% url 'places_web:home' %}?collection=night#places-section"
                class="collection-card collection-night {% if selected_collection == 'night' %}active{% endif %}">
                 <div class="collection-content">
                     <div class="collection-badge">
@@ -227,7 +228,7 @@
             </a>
 
             <!-- ۳. کافه‌ها و فضاهای حیاط‌دار و روباز -->
-            <a href="{% url 'places_web:home' %}?collection=outdoor"
+            <a href="{% url 'places_web:home' %}?collection=outdoor#places-section"
                class="collection-card collection-outdoor {% if selected_collection == 'outdoor' %}active{% endif %}">
                 <div class="collection-content">
                     <div class="collection-badge">
@@ -246,7 +247,7 @@
 </section>
 
 <!-- نوار فیلترهای حسی و تگ‌های سریع (ترکیب‌پذیر با دسته‌بندی و منطقه) -->
-<section class="vibe-filter-section" id="places-section">
+<section class="vibe-filter-section reveal-on-scroll" id="places-section">
     <div class="vibe-container">
 
         <div class="vibe-header">
@@ -256,7 +257,7 @@
             </span>
 
             <!-- وضعیت فیلتر فعال و دکمه ریست سریع -->
-            {% if selected_category or active_tag or search_query or selected_district or selected_collection %}
+            {% if selected_category or active_tag or search_query or selected_district or selected_collection or selected_price %}
                 <div class="active-filter-summary">
                     {% if selected_category_obj %}
                         <span class="pill-badge">دسته: {{ selected_category_obj.name }}</span>
@@ -269,19 +270,19 @@
                     {% if active_tag %}
                         <span class="pill-badge">ویژگی: {{ active_tag }}</span>
                     {% endif %}
+                    {% if selected_price %}
+                        <span class="pill-badge">
+                          قیمت:
+                          {% if selected_price == 'economic' %}اقتصادی
+                          {% elif selected_price == 'medium' %}متوسط
+                          {% elif selected_price == 'luxury' %}لوکس و خاص{% endif %}
+                        </span>
+                    {% endif %}
                     {% if search_query %}
                         <span class="pill-badge">جستجو: {{ search_query }}</span>
                     {% endif %}
 
-                {% if selected_price %}
-    <span class="pill-badge">
-      قیمت:
-      {% if selected_price == 'economic' %}اقتصادی
-      {% elif selected_price == 'medium' %}متوسط
-      {% elif selected_price == 'luxury' %}لوکس و خاص{% endif %}
-    </span>
-{% endif %}
-                    <a href="{% url 'places_web:home' %}" class="btn-clear-all" title="حذف تمام فیلترها">
+                    <a href="{% url 'places_web:home' %}#places-section" class="btn-clear-all" title="حذف تمام فیلترها">
                         <i data-lucide="x"></i>
                         <span>پاک کردن همه</span>
                     </a>
@@ -292,7 +293,7 @@
         <!-- چیپ‌های اسلایدر تگ -->
         <div class="vibe-chips-slider">
             <!-- حالت «همه ویژگی‌ها» -->
-            <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+            <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
                class="vibe-chip {% if not active_tag %}active{% endif %}">
                 همه حال‌وهواها
             </a>
@@ -301,14 +302,14 @@
             {% for tag in quick_tags %}
                 {% if active_tag == tag.name %}
                     <!-- کلیک روی تگ فعال برای لغو انتخاب -->
-                    <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+                    <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
                        class="vibe-chip active">
                         <span>{{ tag.name }}</span>
                         <i data-lucide="check"></i>
                     </a>
                 {% else %}
                     <!-- کلیک روی تگ همراه با حفظ دسته‌بندی و منطقه -->
-                    <a href="{% url 'places_web:home' %}?tag={{ tag.name }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+                    <a href="{% url 'places_web:home' %}?tag={{ tag.name }}&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
                        class="vibe-chip">
                         <span>{{ tag.name }}</span>
                     </a>
@@ -331,15 +332,15 @@
     </div>
 
     <div class="district-chips-container">
-      <!-- گزینه همه محدوده‌ها: حفظ دسته، تگ و تب ولی بدون ارسال پارامتر district -->
-      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+      <!-- گزینه همه محدوده‌ها -->
+      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
          class="district-chip {% if not selected_district %}active{% endif %}">
         همه محدوده‌ها
       </a>
 
       <!-- مناطق واکشی‌شده از دیتابیس با حفظ سایر فیلترها -->
       {% for dist in available_districts %}
-        <a href="{% url 'places_web:home' %}?district={{ dist.district }}&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+        <a href="{% url 'places_web:home' %}?district={{ dist.district }}&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
            class="district-chip {% if selected_district == dist.district %}active{% endif %}">
           <span>{{ dist.district }}</span>
           <span class="district-count">({{ dist.count }})</span>
@@ -349,7 +350,7 @@
   </div>
   {% endif %}
 
-<!-- نوار ۳ سطح قیمتی (Price Level Indicator) -->
+  <!-- نوار ۳ سطح قیمتی (Price Level Indicator) -->
   <div class="price-filter-bar">
     <div class="price-filter-label">
       <i data-lucide="wallet"></i>
@@ -357,28 +358,28 @@
     </div>
 
     <div class="price-chips-container">
-      <!-- گزینه همه قیمت‌ها (حذف فیلتر قیمت با حفظ بقیه فیلترها) -->
-      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+      <!-- گزینه همه قیمت‌ها -->
+      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
          class="price-chip {% if not selected_price %}active{% endif %}">
         همه
       </a>
 
       <!-- ۱. اقتصادی -->
-      <a href="{% url 'places_web:home' %}?price=economic&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?price=economic&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
          class="price-chip {% if selected_price == 'economic' %}active{% endif %}">
         <span class="price-tier-symbol">🟢</span>
         <span>اقتصادی</span>
       </a>
 
       <!-- ۲. متوسط -->
-      <a href="{% url 'places_web:home' %}?price=medium&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?price=medium&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
          class="price-chip {% if selected_price == 'medium' %}active{% endif %}">
         <span class="price-tier-symbol">🟡</span>
         <span>متوسط</span>
       </a>
 
       <!-- ۳. لوکس و گران -->
-      <a href="{% url 'places_web:home' %}?price=luxury&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?price=luxury&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}#places-section"
          class="price-chip {% if selected_price == 'luxury' %}active{% endif %}">
         <span class="price-tier-symbol">🔴</span>
         <span>لوکس و خاص</span>
@@ -389,19 +390,19 @@
   <!-- نوار تب‌های تفکیکی ویترین (Featured Tabs) -->
   <div class="showcase-tabs-wrapper">
     <div class="showcase-tabs">
-      <a href="{% url 'places_web:home' %}?tab=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=popular{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
          class="showcase-tab {% if active_tab == 'popular' %}active{% endif %}">
         <span class="tab-icon">🔥</span>
         <span>محبوب‌ترین‌ها</span>
       </a>
 
-      <a href="{% url 'places_web:home' %}?tab=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=latest{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
          class="showcase-tab {% if active_tab == 'latest' %}active{% endif %}">
         <span class="tab-icon">✨</span>
         <span>جدیدترین‌ها</span>
       </a>
 
-      <a href="{% url 'places_web:home' %}?tab=cozy{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}"
+      <a href="{% url 'places_web:home' %}?tab=cozy{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_district %}&district={{ selected_district }}{% endif %}{% if selected_price %}&price={{ selected_price }}{% endif %}#places-section"
          class="showcase-tab {% if active_tab == 'cozy' %}active{% endif %}">
         <span class="tab-icon">🤫</span>
         <span>پاتوق‌های دنج و خلوت</span>
@@ -451,7 +452,7 @@
       <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
         <i data-lucide="map-pin-off" style="width: 3rem; height: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
         <p style="color: var(--text-secondary); font-size: 1.1rem;">مکانی با مشخصات انتخابی یافت نشد.</p>
-        <a href="{% url 'places_web:home' %}" class="btn-primary-outline" style="margin-top: 1rem;">مشاهده همه مکان‌ها</a>
+        <a href="{% url 'places_web:home' %}#places-section" class="btn-primary-outline" style="margin-top: 1rem;">مشاهده همه مکان‌ها</a>
       </div>
     {% endfor %}
   </div>
@@ -467,9 +468,8 @@
 </section>
 
 <!-- بنر مدرن دعوت به مشارکت و گسترش بریم‌جا (Community CTA) -->
-<section class="community-cta-section">
+<section class="community-cta-section reveal-on-scroll">
     <div class="community-cta-card">
-        <!-- نورهای ملایم داخلی کادر -->
         <div class="cta-glow cta-glow-left"></div>
         <div class="cta-glow cta-glow-right"></div>
 
@@ -499,8 +499,8 @@
     </div>
 </section>
 
-    <!-- بخش پرسش‌های متداول (FAQ Accordion) -->
-<section class="faq-section" id="faq-section">
+<!-- بخش پرسش‌های متداول (FAQ Accordion) -->
+<section class="faq-section reveal-on-scroll" id="faq-section">
     <div class="faq-container">
 
         <div class="faq-header">
@@ -579,7 +579,7 @@
     </div>
 </section>
 
-    <!-- نوار متحرک آخرین تجربیات زنده کاربران (Recent Live Vibe Feed) -->
+<!-- نوار متحرک آخرین تجربیات زنده کاربران (Recent Live Vibe Feed) -->
 {% if recent_reviews %}
 <section class="live-feed-section">
     <div class="live-feed-header">
@@ -638,19 +638,22 @@
 
 {% block extra_js %}
 <script>
-// ۱. غیرفعال‌سازی اسکرول خودکار مرورگر
+// ۱. تنظیم سیاست اسکرول جهت ممانعت از پرش پیش‌فرض مرورگر به سقف صفحه
 if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 
-// ۲. بازیابی دقیق موقعیت عمودی صفحه
+// ۲. بازیابی بدون انیمیشن (Instant) و دقیق موقعیت عمودی صفحه بلافاصله پس از لود
 const savedScroll = sessionStorage.getItem('home_page_scroll');
 if (savedScroll !== null) {
-    window.scrollTo(0, parseInt(savedScroll, 10));
+    window.scrollTo({
+        top: parseInt(savedScroll, 10),
+        behavior: 'instant'
+    });
     sessionStorage.removeItem('home_page_scroll');
 }
 
-// ۳. ثبت آخرین موقعیت قبل از رفرش یا جابه‌جایی
+// ۳. ثبت آخرین موقعیت قبل از رفرش یا ترک صفحه
 window.addEventListener('beforeunload', () => {
     sessionStorage.setItem('home_page_scroll', window.scrollY.toString());
 });
@@ -726,7 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.3 });
+        }, { threshold: 0.12 });
 
         observer.observe(proofSection);
     } else {
@@ -742,19 +745,75 @@ document.addEventListener('DOMContentLoaded', () => {
         questionBtn.addEventListener('click', () => {
             const isOpen = item.classList.contains('active');
 
-            // بستن سایر آیتم‌ها برای حفظ نظم صفحه
             faqItems.forEach(otherItem => {
                 otherItem.classList.remove('active');
                 otherItem.querySelector('.faq-answer').style.maxHeight = null;
             });
 
-            // باز یا بسته کردن آیتم کلیک‌شده
             if (!isOpen) {
                 item.classList.add('active');
                 answer.style.maxHeight = answer.scrollHeight + "px";
             }
         });
     });
+
+    // کنترل اسکلتون لودینگ بدون پرش و با قفل کردن ارتفاع گرید مکان‌ها
+    const filterLinks = document.querySelectorAll(
+        '.showcase-tab, .district-chip, .price-chip, .vibe-chip, .category-item-card:not(.category-item-more)'
+    );
+    const placesGrid = document.querySelector('.places-grid');
+
+    const skeletonTemplate = `
+      <div class="skeleton-card">
+        <div class="skeleton-box skeleton-media"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-box skeleton-title"></div>
+          <div class="skeleton-box skeleton-address"></div>
+          <div class="skeleton-tags-row">
+            <div class="skeleton-box skeleton-tag"></div>
+            <div class="skeleton-box skeleton-tag"></div>
+            <div class="skeleton-box skeleton-tag"></div>
+          </div>
+        </div>
+        <div class="skeleton-footer">
+          <div class="skeleton-box skeleton-hours"></div>
+          <div class="skeleton-box skeleton-btn"></div>
+        </div>
+      </div>
+    `.repeat(6);
+
+    filterLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (e.ctrlKey || e.metaKey) return;
+
+            // ذخیره موقعیت جاری قبل از اجرای تغییر آدرس
+            sessionStorage.setItem('home_page_scroll', window.scrollY.toString());
+
+            if (placesGrid) {
+                // ثابت نگه داشتن ارتفاع بخش برای جلوگیری از کوچک شدن صفحه و پرش اسکرول
+                placesGrid.style.minHeight = placesGrid.offsetHeight + 'px';
+                placesGrid.innerHTML = skeletonTemplate;
+                placesGrid.style.pointerEvents = 'none';
+            }
+        });
+    });
+
+    // انیمیشن اسکرول نرم سراسری برای سکشن‌ها (Scroll Reveal)
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    } else {
+        revealElements.forEach(el => el.classList.add('revealed'));
+    }
 
     // فعال‌سازی سراسری آیکون‌های Lucide
     if (window.lucide) {

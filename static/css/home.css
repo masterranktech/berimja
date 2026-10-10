@@ -256,6 +256,157 @@
 }
 
 /* ==========================================================================
+   نوار آمار زنده و اعتبار پلتفرم (Enhanced Social Proof Cards)
+   ========================================================================== */
+
+.social-proof-section {
+    position: relative;
+    max-width: 1120px;
+    margin: 15px auto 45px auto;
+    padding: 0 20px;
+    z-index: 2;
+}
+
+.social-proof-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+/* کارت‌های آماری مستقل */
+.proof-stat-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    border-radius: 24px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.7) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.04),
+        0 2px 6px rgba(15, 23, 42, 0.02);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.proof-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 35px rgba(225, 29, 72, 0.08);
+    border-color: rgba(225, 29, 72, 0.25);
+}
+
+/* کارت وسطی با ته‌رنگ ملایم برند */
+.proof-stat-card.highlight-card {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 241, 242, 0.85) 0%,
+        rgba(255, 255, 255, 0.95) 100%
+    );
+    border-color: rgba(225, 29, 72, 0.2);
+}
+
+/* آیکون باکس‌های شیک با گرادیانت */
+.proof-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.proof-stat-card:hover .proof-icon-wrapper {
+    transform: scale(1.08) rotate(4deg);
+}
+
+.icon-shield {
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+}
+
+.icon-percent {
+    background: rgba(225, 29, 72, 0.12);
+    color: var(--color-primary);
+}
+
+.icon-map {
+    background: rgba(59, 130, 246, 0.12);
+    color: #2563eb;
+}
+
+.proof-icon-wrapper i {
+    width: 26px;
+    height: 26px;
+}
+
+/* اعداد و نوشته‌ها */
+.proof-stat-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number-row {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.stat-plus {
+    color: var(--color-primary);
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.stat-unit {
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.stat-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 6px 0 2px 0;
+}
+
+.stat-description {
+    font-size: 0.775rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* واکنش‌گرایی تبلت و موبایل */
+@media (max-width: 900px) {
+    .social-proof-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .proof-stat-card {
+        padding: 16px 20px;
+    }
+
+    .stat-number-row {
+        font-size: 1.7rem;
+    }
+}
+
+/* ==========================================================================
    Visual Categories Section
    ========================================================================== */
 
@@ -415,6 +566,173 @@
 }
 
 .category-item-more:hover .more-box {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   کلکسیون‌های سناریومحور (Mood Collections)
+   ========================================================================== */
+
+.collections-section {
+    position: relative;
+    max-width: 1120px;
+    margin: 10px auto 35px auto;
+    padding: 0 20px;
+    z-index: 1;
+}
+
+.collections-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.collections-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.collections-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 3px 0 0 0;
+}
+
+.collections-reset-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.collections-reset-link i {
+    width: 14px;
+    height: 14px;
+}
+
+/* شبکه ۳ ستونه کارت‌های سناریو */
+.collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 16px;
+}
+
+.collection-card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    min-height: 145px;
+    padding: 20px 22px;
+    border-radius: 22px;
+    text-decoration: none;
+    overflow: hidden;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* گرادیان‌های اختصاصی برای تمایز هر سناریو */
+.collection-work {
+    background: linear-gradient(135deg, rgba(238, 242, 255, 0.85) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.collection-night {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.85) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.collection-outdoor {
+    background: linear-gradient(135deg, rgba(255, 241, 242, 0.85) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.collection-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 1;
+}
+
+.collection-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    padding: 3px 9px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-full);
+    width: fit-content;
+}
+
+.collection-badge i {
+    width: 13px;
+    height: 13px;
+    color: var(--color-primary);
+}
+
+.collection-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 2px 0 0 0;
+}
+
+.collection-desc {
+    font-size: 0.775rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 250px;
+}
+
+/* فلش گوشه کارت */
+.collection-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--text-secondary);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+    flex-shrink: 0;
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.collection-arrow i {
+    width: 16px;
+    height: 16px;
+}
+
+.collection-card:hover .collection-arrow {
+    transform: translateX(-4px);
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+/* وضعیت فعال (Active State) */
+.collection-card.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 25px rgba(225, 29, 72, 0.15);
+}
+
+.collection-card.active .collection-arrow {
     background-color: var(--color-primary);
     color: #ffffff;
 }
@@ -988,4 +1306,187 @@
 .showcase-tab.active:hover {
   background: var(--color-primary-hover);
   color: #ffffff;
+}
+
+/* ==========================================================================
+   بنر شیشه‌ای دعوت به مشارکت (Community CTA)
+   ========================================================================== */
+
+.community-cta-section {
+    position: relative;
+    max-width: 1120px;
+    margin: 20px auto 60px auto;
+    padding: 0 20px;
+    z-index: 1;
+}
+
+.community-cta-card {
+    position: relative;
+    overflow: hidden;
+    padding: 55px 30px;
+    border-radius: 28px;
+    text-align: center;
+
+    /* افکت شیشه‌ای با گرادیانت بسیار ملایم زرشکی و سفید */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 241, 242, 0.75) 50%,
+        rgba(255, 255, 255, 0.85) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.95);
+
+    box-shadow:
+        0 20px 45px rgba(15, 23, 42, 0.05),
+        0 4px 15px rgba(225, 29, 72, 0.04);
+
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+/* هاله‌های نوری محو درون کادر بنر */
+.cta-glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.cta-glow-left {
+    top: -80px;
+    right: -60px;
+    background-color: rgba(225, 29, 72, 0.18);
+}
+
+.cta-glow-right {
+    bottom: -90px;
+    left: -50px;
+    background-color: rgba(244, 63, 94, 0.15);
+}
+
+.community-cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.cta-badge i {
+    width: 14px;
+    height: 14px;
+}
+
+.community-cta-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 12px 0;
+    letter-spacing: -0.5px;
+}
+
+.community-cta-desc {
+    font-size: 0.975rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin: 0 auto 30px auto;
+}
+
+/* دکمه‌های اکشن بنر */
+.community-cta-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.btn-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    background: linear-gradient(135deg, var(--color-primary), #f43f5e);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(225, 29, 72, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 24px rgba(225, 29, 72, 0.32);
+}
+
+.btn-cta-primary i {
+    width: 17px;
+    height: 17px;
+}
+
+.btn-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-base);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-cta-secondary:hover {
+    background: #ffffff;
+    border-color: var(--color-primary-subtle);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.btn-cta-secondary i {
+    width: 17px;
+    height: 17px;
+}
+
+@media (max-width: 640px) {
+    .community-cta-card {
+        padding: 40px 18px;
+    }
+
+    .community-cta-title {
+        font-size: 1.45rem;
+    }
+
+    .community-cta-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-cta-primary,
+    .btn-cta-secondary {
+        width: 100%;
+        justify-content: center;
+    }
 }

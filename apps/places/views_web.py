@@ -12,7 +12,8 @@ def home_page_view(request):
     selected_category = request.GET.get('category', '').strip()
     active_tag = request.GET.get('tag', '').strip()
     search_query = request.GET.get('q', '').strip()
-    active_tab = request.GET.get('tab', 'popular').strip()  # پیش‌فرض: محبوب‌ترین‌ها
+    active_tab = request.GET.get('tab', 'popular').strip()
+    selected_collection = request.GET.get('collection', '').strip()
 
     selected_category_obj = None
     if selected_category:
@@ -72,6 +73,25 @@ def home_page_view(request):
 
     quick_tags = Tag.objects.filter(status='ACTIVE')[:10]
 
+    # فیلتر اختصاصی کلکسیون‌های سناریومحور
+    if selected_collection == 'work':
+        # مناسب دورکاری و مطالعه با لپ‌تاپ
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['مناسب مطالعه', 'خلوت', 'دنج'],
+            place_tags__is_active=True
+        )
+    elif selected_collection == 'night':
+        # پاتوق‌های شبانه و باز تا دیرساعت (ساعت کاری شامل ۲۴:۰۰ یا ۲۴ ساعته)
+        places_qs = places_qs.filter(
+            working_hours__iregex=r'(24|۲۴|بامداد|شب)'
+        )
+    elif selected_collection == 'outdoor':
+        # فضاهای باز و حیاط‌دار
+        places_qs = places_qs.filter(
+            place_tags__tag__name__in=['فضای باز', 'حیاط'],
+            place_tags__is_active=True
+        )
+
     context = {
         'places': places_list,
         'total_count': total_count,
@@ -83,6 +103,7 @@ def home_page_view(request):
         'quick_tags': quick_tags,
         'active_tag': active_tag,
         'search_query': search_query,
+        'selected_collection': selected_collection,
     }
     return render(request, 'places/home.html', context)
 

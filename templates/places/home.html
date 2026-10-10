@@ -62,6 +62,59 @@
     </div>
 </section>
 
+ <!-- نوار مدرن و متحرک آمار زنده و اعتبار پلتفرم (Interactive Social Proof) -->
+<section class="social-proof-section" id="social-proof-section">
+    <div class="social-proof-container">
+
+        <!-- کارت ۱: نظرات اعتبارسنجی‌شده با شمارنده پویا -->
+        <div class="proof-stat-card">
+            <div class="proof-icon-wrapper icon-shield">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <div class="proof-stat-body">
+                <div class="stat-number-row">
+                    <span class="stat-plus">+</span>
+                    <span class="stat-counter" data-target="150">0</span>
+                </div>
+                <h4 class="stat-title">تجربه اعتبارسنجی‌شده</h4>
+                <p class="stat-description">ثبت و پایش دقیق توسط کاربران واقعی شهر</p>
+            </div>
+        </div>
+
+        <!-- کارت ۲: استقلال و تجربه واقعی -->
+        <div class="proof-stat-card highlight-card">
+            <div class="proof-icon-wrapper icon-percent">
+                <i data-lucide="sparkles"></i>
+            </div>
+            <div class="proof-stat-body">
+                <div class="stat-number-row">
+                    <span class="stat-counter" data-target="100">0</span>
+                    <span class="stat-unit">٪</span>
+                </div>
+                <h4 class="stat-title">بدون تبلیغات و اسپانسر</h4>
+                <p class="stat-description">رتبه‌بندی کاملاً بی‌طرفانه، فقط بر پایه حس‌وحال واقعی</p>
+            </div>
+        </div>
+
+        <!-- کارت ۳: پاتوق‌ها و پوشش شهری -->
+        <div class="proof-stat-card">
+            <div class="proof-icon-wrapper icon-map">
+                <i data-lucide="compass"></i>
+            </div>
+            <div class="proof-stat-body">
+                <div class="stat-number-row">
+                    <span class="stat-plus">+</span>
+                    <span class="stat-counter" data-target="22">0</span>
+                    <span class="stat-unit" style="font-size: 1.1rem; margin-right: 4px;">منطقه</span>
+                </div>
+                <h4 class="stat-title">پوشش هدفمند پاتوق‌های تهران</h4>
+                <p class="stat-description">سنجش زنده شلوغی، نور، قیمت و آرامش محیط</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- نوار دسته‌بندی‌های منتخب (Top Categories) -->
 <section class="categories-section" id="categories-section">
     <div class="categories-container">
@@ -119,6 +172,75 @@
                     <i data-lucide="more-horizontal"></i>
                 </div>
                 <span class="category-name">سایر دسته‌ها</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+    <!-- بخش کلکسیون‌های سناریومحور (Mood Collections) -->
+<section class="collections-section">
+    <div class="collections-container">
+        <div class="collections-header">
+            <div>
+                <h3 class="collections-title">کلکسیون‌های حال‌وهوا</h3>
+                <p class="collections-subtitle">سناریوی مد نظرت رو با یک کلیک پیدا کن</p>
+            </div>
+            {% if selected_collection %}
+                <a href="{% url 'places_web:home' %}" class="collections-reset-link">
+                    <i data-lucide="rotate-ccw"></i>
+                    <span>نمایش همه کلکسیون‌ها</span>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="collections-grid">
+            <!-- ۱. مناسب دورکاری و مطالعه -->
+            <a href="{% url 'places_web:home' %}?collection=work"
+               class="collection-card collection-work {% if selected_collection == 'work' %}active{% endif %}">
+                <div class="collection-content">
+                    <div class="collection-badge">
+                        <i data-lucide="laptop"></i>
+                        <span>فوکوس و کار</span>
+                    </div>
+                    <h4 class="collection-name">مناسب دورکاری و مطالعه</h4>
+                    <p class="collection-desc">کافه‌ها و پاتوق‌های آرام، دارای پریز برق و اینترنت پایدار</p>
+                </div>
+                <div class="collection-arrow">
+                    <i data-lucide="arrow-left"></i>
+                </div>
+            </a>
+
+            <!-- ۲. پاتوق‌های شبانه -->
+            <a href="{% url 'places_web:home' %}?collection=night"
+               class="collection-card collection-night {% if selected_collection == 'night' %}active{% endif %}">
+                <div class="collection-content">
+                    <div class="collection-badge">
+                        <i data-lucide="moon"></i>
+                        <span>شب‌گردی تهران</span>
+                    </div>
+                    <h4 class="collection-name">پاتوق‌های باز تا دیرساعت</h4>
+                    <p class="collection-desc">جاهایی که نیمه‌شب به بعد یا ۲۴ ساعته چراغشون روشنه</p>
+                </div>
+                <div class="collection-arrow">
+                    <i data-lucide="arrow-left"></i>
+                </div>
+            </a>
+
+            <!-- ۳. کافه‌ها و فضاهای حیاط‌دار و روباز -->
+            <a href="{% url 'places_web:home' %}?collection=outdoor"
+               class="collection-card collection-outdoor {% if selected_collection == 'outdoor' %}active{% endif %}">
+                <div class="collection-content">
+                    <div class="collection-badge">
+                        <i data-lucide="sun"></i>
+                        <span>هوای تازه</span>
+                    </div>
+                    <h4 class="collection-name">حیاط‌دار و فضای باز</h4>
+                    <p class="collection-desc">کافه‌ها و رستوران‌های دارای بالکن، روف‌گاردن یا حوض فیروزه‌ای</p>
+                </div>
+                <div class="collection-arrow">
+                    <i data-lucide="arrow-left"></i>
+                </div>
             </a>
         </div>
     </div>
@@ -262,6 +384,39 @@
     </div>
   {% endif %}
 </section>
+
+    <!-- بنر مدرن دعوت به مشارکت و گسترش بریم‌جا (Community CTA) -->
+<section class="community-cta-section">
+    <div class="community-cta-card">
+        <!-- نورهای ملایم داخلی کادر -->
+        <div class="cta-glow cta-glow-left"></div>
+        <div class="cta-glow cta-glow-right"></div>
+
+        <div class="community-cta-content">
+            <div class="cta-badge">
+                <i data-lucide="users"></i>
+                <span>مشارکت جامعه بریم‌جا</span>
+            </div>
+
+            <h3 class="community-cta-title">پاتوق موردعلاقه‌ات توی لیست نیست؟</h3>
+            <p class="community-cta-desc">
+                بریم‌جا با تجربه‌های واقعی آدم‌های شهر کامل می‌شه. اگه کافه، رستوران یا گوشه دنجی رو می‌شناسی که جاش اینجاست، به ما معرفیش کن یا با ثبت تجربه‌هات به انتخاب بقیه کمک کن.
+            </p>
+
+            <div class="community-cta-actions">
+                <button type="button" class="btn-cta-primary" id="btn-open-suggest-modal">
+                    <i data-lucide="plus-circle"></i>
+                    <span>معرفی و ثبت مکان جدید</span>
+                </button>
+
+                <a href="#places-section" class="btn-cta-secondary">
+                    <i data-lucide="message-square-plus"></i>
+                    <span>ثبت نظر برای مکان‌های موجود</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
@@ -316,6 +471,53 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.scrollLeft = scrollLeft - walk;
         });
     }
+
+    // انیمیشن شمارش اعداد (Count-up Animation)
+const counters = document.querySelectorAll('.stat-counter');
+let hasAnimated = false;
+
+const runCounterAnimation = () => {
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'), 10);
+        const duration = 1600; // مدت انیمیشن بر حسب میلی‌ثانیه
+        const frameRate = 1000 / 60;
+        const totalFrames = Math.round(duration / frameRate);
+        let frame = 0;
+
+        const countTimer = setInterval(() => {
+            frame++;
+            // تابع حرکت Ease-Out برای فرود نرم اعداد
+            const progress = frame / totalFrames;
+            const current = Math.round(target * (1 - Math.pow(1 - progress, 3)));
+
+            counter.innerText = current.toLocaleString('fa-IR');
+
+            if (frame >= totalFrames) {
+                counter.innerText = target.toLocaleString('fa-IR');
+                clearInterval(countTimer);
+            }
+        }, frameRate);
+    });
+};
+
+// اجرای انیمیشن به محض نمایان شدن در دید کاربر (Intersection Observer)
+const proofSection = document.getElementById('social-proof-section');
+if (proofSection && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !hasAnimated) {
+                hasAnimated = true;
+                runCounterAnimation();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    observer.observe(proofSection);
+} else {
+    // اجرای مستقیم در صورت عدم پشتیبانی مرورگر
+    runCounterAnimation();
+}
 
     // فعال‌سازی سراسری آیکون‌های Lucide
     if (window.lucide) {

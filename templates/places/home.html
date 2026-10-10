@@ -498,6 +498,86 @@
         </div>
     </div>
 </section>
+
+    <!-- بخش پرسش‌های متداول (FAQ Accordion) -->
+<section class="faq-section" id="faq-section">
+    <div class="faq-container">
+
+        <div class="faq-header">
+            <span class="faq-badge">
+                <i data-lucide="help-circle"></i>
+                <span>پاسخ به سوالات پرتکرار</span>
+            </span>
+            <h3 class="faq-title">چطور به انتخاب شما کمک می‌کنیم؟</h3>
+            <p class="faq-subtitle">شفافیت کامل در نحوه تحلیل داده‌ها، امتیازدهی و سنجش اتمسفر مکان‌ها</p>
+        </div>
+
+        <div class="faq-accordion">
+
+            <!-- سوال ۱: نحوه سنجش تگ‌ها -->
+            <div class="faq-item">
+                <button type="button" class="faq-question">
+                    <span class="faq-question-text">درصد تگ‌ها (مثل ۸۵٪ خلوت یا ۹۰٪ مناسب قرار) چطور محاسبه می‌شوند؟</span>
+                    <span class="faq-icon-box">
+                        <i data-lucide="chevron-down"></i>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        این درصدها نظر شخصی مدیران یا تبلیغ کافه‌دارها نیست؛ بلکه نتیجه پاسخ‌های گزینه‌ای و واقعی کاربران در پرسشنامه‌های ساختاریافته است. زمانی که درصد موافقت کاربران از حد نصاب آماری (Threshold) عبور کند، تگ مربوطه همراه با درصد اطمینان دقیق روی مکان فعال می‌شود.
+                    </p>
+                </div>
+            </div>
+
+            <!-- سوال ۲: استقلال پلتفرم و عدم وجود تبلیغات -->
+            <div class="faq-item">
+                <button type="button" class="faq-question">
+                    <span class="faq-question-text">آیا رتبه‌بندی مکان‌ها شامل تبلیغات یا رپورتاژ پولی است؟</span>
+                    <span class="faq-icon-box">
+                        <i data-lucide="chevron-down"></i>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        خیر، به هیچ وجه. بریم‌جا کاملاً مستقل است و امکان پرداخت هزینه برای ارتقای رتبه، تغییر تگ‌ها یا پنهان‌سازی نظرات منفی برای هیچ کسب‌وکاری وجود ندارد. جایگاه و قدرت تگ هر پاتوق ۱۰۰٪ بازتاب تجربه مستقیم مراجعان آن است.
+                    </p>
+                </div>
+            </div>
+
+            <!-- سوال ۳: سیستم امتیازدهی و پرسشنامه چندمعیاره -->
+            <div class="faq-item">
+                <button type="button" class="faq-question">
+                    <span class="faq-question-text">چرا به جای ستاره کلی (۱ تا ۵)، سیستم امتیازدهی چندمعیاره داریم؟</span>
+                    <span class="faq-icon-box">
+                        <i data-lucide="chevron-down"></i>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        یک کافه ممکن است قهوه عالی اما فضایی شلوغ داشته باشد. دادن یک امتیاز کلی کمکی به تصمیم‌گیری بر اساس هدف شما نمی‌کند. سیستم چندمعیاره به شما نشان می‌دهد که این فضا دقیقاً از نظر آرامش، نور، قیمت، اینترنت یا مناسبت برای قرارهای کاری چه وضعیتی دارد.
+                    </p>
+                </div>
+            </div>
+
+            <!-- سوال ۴: تفاوت با سایر پلتفرم‌ها -->
+            <div class="faq-item">
+                <button type="button" class="faq-question">
+                    <span class="faq-question-text">چه تفاوتی میان بریم‌جا با نقشه‌های آنلاین یا شبکه‌های اجتماعی وجود دارد؟</span>
+                    <span class="faq-icon-box">
+                        <i data-lucide="chevron-down"></i>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        در نقشه‌ها باید ده‌ها متن طولانی و سلیقه‌ای را بخوانید تا متوجه وضعیت شلوغی یا قیمت شوید. در شبکه‌های اجتماعی هم عکس‌های تبلیغاتی واقعیت را نشان نمی‌دهند. بریم‌جا با فیلترهای حس‌وحال در کمتر از ۳۰ ثانیه به سوال اصلی شما پاسخ می‌دهد: «آیا اینجا الان به درد شرایط من می‌خورد؟».
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
@@ -596,6 +676,29 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         runCounterAnimation();
     }
+
+    // لاجیک تعاملی آکاردئون پرسش‌های متداول (FAQ Accordion)
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        questionBtn.addEventListener('click', () => {
+            const isOpen = item.classList.contains('active');
+
+            // بستن سایر آیتم‌ها برای حفظ نظم صفحه
+            faqItems.forEach(otherItem => {
+                otherItem.classList.remove('active');
+                otherItem.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            // باز یا بسته کردن آیتم کلیک‌شده
+            if (!isOpen) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            }
+        });
+    });
 
     // فعال‌سازی سراسری آیکون‌های Lucide
     if (window.lucide) {

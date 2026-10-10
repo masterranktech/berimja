@@ -12,7 +12,7 @@ def home_page_view(request):
     selected_category = request.GET.get('category', '').strip()
     active_tag = request.GET.get('tag', '').strip()
     search_query = request.GET.get('q', '').strip()
-    active_tab = request.GET.get('tab', 'popular').strip()
+    active_tab = request.GET.get('tab', 'popular').strip() or 'popular'
     selected_collection = request.GET.get('collection', '').strip()
     selected_district = request.GET.get('district', '').strip()
 

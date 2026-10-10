@@ -313,7 +313,7 @@
 <!-- بخش نمایش لیست مکان‌ها همراه با فیلتر منطقه و تب‌های ویترین -->
 <section class="container" style="padding-bottom: 4rem;">
 
-  <!-- نوار فیلتر سریع مناطق شهری (تهران و کرج به صورت داینامیک از دیتابیس) -->
+  <!-- نوار فیلتر سریع مناطق شهری (تهران و کرج) -->
   {% if available_districts %}
   <div class="district-filter-bar">
     <div class="district-filter-label">
@@ -322,15 +322,15 @@
     </div>
 
     <div class="district-chips-container">
-      <!-- گزینه همه مناطق -->
-      <a href="{% url 'places_web:home' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
+      <!-- گزینه همه محدوده‌ها: حفظ دسته، تگ و تب ولی بدون ارسال پارامتر district -->
+      <a href="{% url 'places_web:home' %}?tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
          class="district-chip {% if not selected_district %}active{% endif %}">
         همه محدوده‌ها
       </a>
 
       <!-- مناطق واکشی‌شده از دیتابیس با حفظ سایر فیلترها -->
       {% for dist in available_districts %}
-        <a href="{% url 'places_web:home' %}?district={{ dist.district }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if active_tab %}&tab={{ active_tab }}{% endif %}"
+        <a href="{% url 'places_web:home' %}?district={{ dist.district }}&tab={{ active_tab|default:'popular' }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if active_tag %}&tag={{ active_tag }}{% endif %}{% if selected_collection %}&collection={{ selected_collection }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
            class="district-chip {% if selected_district == dist.district %}active{% endif %}">
           <span>{{ dist.district }}</span>
           <span class="district-count">({{ dist.count }})</span>

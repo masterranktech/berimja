@@ -431,3 +431,92 @@
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+
+/* ==========================================================================
+   دکمه شناور شیشه‌ای پرش به بالا (Back to Top Island)
+   ========================================================================== */
+
+.back-to-top-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  color: var(--text-primary, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 99;
+
+  /* افکت شیشه‌ای مدرن */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.08),
+    0 2px 6px rgba(15, 23, 42, 0.04);
+
+  /* حالت پیش‌فرض: محو و غیرقابل کلیک */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.9);
+  transition:
+    opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.back-to-top-btn i,
+.back-to-top-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2px;
+  transition: transform 0.25s ease;
+}
+
+/* وضعیت نمایان شدن بعد از اسکرول */
+.back-to-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* هاور و لمس تعاملی */
+.back-to-top-btn:hover {
+  background-color: var(--color-primary, #e11d48);
+  color: #ffffff;
+  border-color: var(--color-primary, #e11d48);
+  box-shadow: 0 12px 30px rgba(225, 29, 72, 0.3);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.back-to-top-btn:hover i,
+.back-to-top-btn:hover svg {
+  transform: translateY(-2px);
+}
+
+.back-to-top-btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* تطبیق موقعیت در نمایشگرهای موبایل */
+@media (max-width: 640px) {
+  .back-to-top-btn {
+    bottom: 20px;
+    left: 20px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .back-to-top-btn i,
+  .back-to-top-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}

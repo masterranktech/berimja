@@ -85,12 +85,19 @@
       <p class="footer-copy">© ۱۴۰۴ بریم‌جا — موتور تصمیم‌گیری انتخاب مقصد بر اساس تجربه‌های واقعی.</p>
     </div>
   </footer>
+
+      <!-- دکمه شناور پرش به بالا (Back to Top Island) -->
+  <button id="btn-back-to-top" class="back-to-top-btn" aria-label="پرش به بالای صفحه" title="بازگشت به بالا">
+    <i data-lucide="chevron-up"></i>
+  </button>
   {% endblock site_footer %}
 
   <!-- اسکریپت کنترل مودال و وضعیت نشست -->
   <script src="{% static 'js/auth-modal.js' %}"></script>
 
     <script src="{% static 'js/ambient-orbs.js' %}"></script>
+
+<script src="{% static 'js/scroll-to-top.js' %}"></script>
 
   <!-- اسکریپت لوکال آیکون‌های Lucide -->
   <script src="{% static 'js/lucide.min.js' %}"></script>
